@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast';
 import { STRIPE_PRODUCTS } from '../stripe-config';
 import { createCheckoutSession } from '../services/stripeService';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -20,8 +21,27 @@ export default function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
 
   const handlePayment = async () => {
     if (!user) {
-      toast.error('Please sign in to subscribe');
-      navigate('/login');
+      try {
+        // Sign in with Google using Supabase
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin + '/pricing',
+            queryParams: {
+              access_type: 'offline',
+              prompt: 'select_account'
+            }
+          }
+        });
+        
+        if (error) throw error;
+        toast.success('Redirecting to sign in...');
+        onClose();
+        
+      } catch (error: any) {
+        console.error('Error signing in:', error);
+        toast.error('Failed to sign in. Please try again.');
+      }
       return;
     }
 
@@ -132,7 +152,7 @@ export default function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                   ) : (
                     <>
                       <Zap className="w-4 h-4" />
-                      <span className="text-sm font-medium">Upgrade Now</span>
+                      <span className="text-sm font-medium">{user ? 'Upgrade Now' : 'Sign in with Google'}</span>
                     </>
                   )}
                 </motion.button>

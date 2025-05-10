@@ -88,7 +88,9 @@ export default function LandingPage() {
   const [showHandleHint, setShowHandleHint] = useState(true);
   const [userInteracted, setUserInteracted] = useState(false);
   const [showAITooltip, setShowAITooltip] = useState(false);
+  const [showPricingTooltip, setShowPricingTooltip] = useState(false);
   const aiTextRef = useRef<HTMLSpanElement>(null);
+  const pricingTextRef = useRef<HTMLSpanElement>(null);
 
   // Auto-redirect to app if logged in
   useEffect(() => {
@@ -372,6 +374,7 @@ export default function LandingPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
+                className="flex flex-col items-center lg:items-start"
               >
                 <Link
                   to="/app"
@@ -380,6 +383,32 @@ export default function LandingPage() {
                   Try It Now
                   <ArrowRight className="ml-2 w-5 h-5 text-yellow-400 dark:text-yellow-300" />
                 </Link>
+                
+                <div className="mt-3">
+                  <span 
+                    ref={pricingTextRef}
+                    className="inline-block border-b border-gray-400 dark:border-gray-600 relative cursor-help text-gray-600 dark:text-gray-400 text-sm"
+                    onMouseEnter={() => setShowPricingTooltip(true)}
+                    onMouseLeave={() => setShowPricingTooltip(false)}
+                  >
+                    <Link to="/pricing" className="hover:text-gray-900 dark:hover:text-gray-200">
+                      View pricing plans
+                    </Link>
+                    <AnimatePresence>
+                      {showPricingTooltip && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -5 }}
+                          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 text-sm text-center bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg shadow-xl border border-gray-300 dark:border-gray-600 whitespace-nowrap z-[9999]"
+                          style={{ pointerEvents: 'none' }}
+                        >
+                          <span className="font-bold italic">Start with 5 free requests per day!</span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </span>
+                </div>
               </motion.div>
             </motion.div>
 

@@ -6,6 +6,7 @@ import { createCheckoutSession } from '../services/stripeService';
 import { useUserStore } from '../store/userStore';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 
 export default function PricingPlans() {
   const [isLoading, setIsLoading] = useState<string | null>(null);
@@ -14,8 +15,29 @@ export default function PricingPlans() {
 
   const handleSubscribe = async (priceId: string) => {
     if (!user) {
-      toast.error('Please sign in to subscribe');
-      navigate('/login');
+      // Use Google sign-in directly instead of redirecting to login page
+      try {
+        setIsLoading(priceId);
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin + '/pricing',
+            queryParams: {
+              access_type: 'offline',
+              prompt: 'select_account'
+            }
+          }
+        });
+        
+        if (error) throw error;
+        toast.success('Please sign in with Google to continue');
+        
+      } catch (error: any) {
+        console.error('Error signing in:', error);
+        toast.error('Failed to sign in. Please try again.');
+      } finally {
+        setIsLoading(null);
+      }
       return;
     }
 
@@ -79,7 +101,7 @@ export default function PricingPlans() {
                     <span>Processing...</span>
                   </>
                 ) : (
-                  <span>Subscribe Now</span>
+                  <span>{user ? 'Subscribe Now' : 'Sign in with Google'}</span>
                 )}
               </motion.button>
             </motion.div>

@@ -22,6 +22,7 @@ export default function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
   const handlePayment = async () => {
     if (!user) {
       try {
+        setIsLoading(true);
         // Sign in with Google using Supabase
         const { data, error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
@@ -41,6 +42,8 @@ export default function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
       } catch (error: any) {
         console.error('Error signing in:', error);
         toast.error('Failed to sign in. Please try again.');
+      } finally {
+        setIsLoading(false);
       }
       return;
     }

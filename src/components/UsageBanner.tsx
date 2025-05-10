@@ -4,6 +4,7 @@ import { Zap, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { hasActiveSubscription } from '../services/stripeService';
 import { useUserStore } from '../store/userStore';
+import { supabase } from '../lib/supabase';
 
 interface UsageBannerProps {
   remainingMessages: number;
@@ -42,6 +43,26 @@ export default function UsageBanner({
 
   const isOutOfMessages = remainingMessages <= 0;
   
+  const handleGoogleAuth = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin + '/app',
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'select_account'
+          }
+        }
+      });
+      
+      if (error) throw error;
+      // User will be redirected to Google auth
+    } catch (error) {
+      console.error('Error with Google auth:', error);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -81,12 +102,14 @@ export default function UsageBanner({
             Upgrade
           </motion.button>
         ) : (
-          <Link
-            to="/login"
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleGoogleAuth}
             className="px-3 py-1.5 text-xs font-medium rounded-md bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 flex items-center gap-1"
           >
             Sign In
-          </Link>
+          </motion.button>
         )
       )}
     </motion.div>

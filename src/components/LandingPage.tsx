@@ -251,6 +251,20 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-white dark:bg-black flex justify-center">
+      {/* App brand in top left corner */}
+      <div className="fixed top-4 left-4 md:left-6 md:top-6 z-10">
+        <div className="font-semibold text-gray-900 dark:text-white">
+          <span className="font-serif italic">Make it </span>
+          <span className="font-bold">SHORTER</span>
+          <span className="font-serif italic">!!!</span>
+        </div>
+      </div>
+
+      {/* Auth display at the top */}
+      <div className="fixed top-0 right-0 m-4 md:m-6 z-10">
+        {user ? <LoggedInIndicator /> : <AuthButton />}
+      </div>
+
       <div className="w-full max-w-7xl px-4 sm:px-6 min-h-screen flex items-center">
         <div className="w-full py-16 md:py-20">
           <div className="flex flex-col lg:flex-row items-center justify-center gap-16 md:gap-20 lg:gap-12">

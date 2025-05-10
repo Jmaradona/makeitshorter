@@ -52,6 +52,7 @@ export default function App() {
   const isPricingRoute = location.pathname === '/pricing';
   const isAccountRoute = location.pathname === '/account';
   const isCheckoutRoute = location.pathname.startsWith('/checkout/');
+  const isLandingRoute = location.pathname === '/';
 
   // Check if OpenAI API is available
   useEffect(() => {
@@ -254,8 +255,8 @@ export default function App() {
     }
   }, [isAppRoute, apiStatus, navigate]);
 
-  // Don't show the navbar on auth pages
-  const showNavbar = !isAuthRoute && !isCheckoutRoute;
+  // Don't show the navbar on auth pages or landing page
+  const showNavbar = !isAuthRoute && !isCheckoutRoute && !isLandingRoute;
 
   return (
     <div className={`h-screen flex flex-col ${isDarkMode ? 'dark' : ''}`}>

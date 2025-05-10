@@ -35,7 +35,7 @@ export default function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
         });
         
         if (error) throw error;
-        toast.success('Redirecting to sign in...');
+        toast.success('Please sign in with Google to continue');
         onClose();
         
       } catch (error: any) {
@@ -74,7 +74,7 @@ export default function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="bg-white dark:bg-gray-900 rounded-xl shadow-xl w-full max-w-md overflow-hidden"
+            className="bg-white dark:bg-gray-900 rounded-xl shadow-xl w-full max-w-md overflow-hidden my-8"
           >
             <div className="p-6 space-y-4">
               <div className="flex items-center justify-between">

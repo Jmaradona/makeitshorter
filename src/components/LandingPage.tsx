@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ChevronsUpDown, Mail, ArrowDown } from 'lucide-react';
+import { ArrowRight, ChevronDown, Mail, ArrowDown } from 'lucide-react';
 import AuthButton from './AuthButton';
 import LoggedInIndicator from './LoggedInIndicator';
 import { useUserStore } from '../store/userStore';
@@ -66,11 +66,11 @@ Alex`
 };
 
 export default function LandingPage() {
-  const [currentSize, setCurrentSize] = useState('medium');
+  const [currentSize, setCurrentSize] = useState('long'); // Changed to start with 'long'
   const [isResizing, setIsResizing] = useState(false);
   const [startY, setStartY] = useState(0);
   const [currentHeight, setCurrentHeight] = useState(0);
-  const [dragProgress, setDragProgress] = useState(50); // 0-100 scale, start in middle
+  const [dragProgress, setDragProgress] = useState(85); // Changed to 85 to start with long version
   const contentRefs = useRef({
     long: React.createRef<HTMLDivElement>(),
     medium: React.createRef<HTMLDivElement>(),
@@ -109,8 +109,8 @@ export default function LandingPage() {
       };
       
       setContentHeights(newHeights);
-      // Initialize with medium height
-      setCurrentHeight(newHeights.medium);
+      // Initialize with long height
+      setCurrentHeight(newHeights.long);
     };
     
     // Allow time for rendering and font loading
@@ -516,7 +516,7 @@ export default function LandingPage() {
                   >
                     <div className="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full mb-1" />
                     <div className="px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs font-medium rounded-md flex items-center gap-1.5">
-                      <ChevronsUpDown className="w-3 h-3" />
+                      <ChevronDown className="w-3 h-3" />
                       {currentSize === 'long' ? 'Detailed Version' :
                        currentSize === 'medium' ? 'Balanced Version' :
                        'Short Version'}

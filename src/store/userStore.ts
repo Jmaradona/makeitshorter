@@ -7,6 +7,8 @@ interface UserState {
   isDarkMode: boolean;
   isOfflineMode: boolean;
   assistantId: string;
+  isPaid: boolean;
+  remainingMessages: number;
   preferences: {
     style: string;
     formality: string;
@@ -23,6 +25,8 @@ interface UserState {
   setUser: (user: User | null) => void;
   setPreferences: (preferences: Partial<UserState['preferences']>) => void;
   setAssistantId: (id: string) => void;
+  setIsPaid: (isPaid: boolean) => void;
+  setRemainingMessages: (count: number) => void;
   toggleDarkMode: () => void;
   toggleOfflineMode: () => void;
 }
@@ -34,6 +38,8 @@ export const useUserStore = create<UserState>()(
       isDarkMode: false,
       isOfflineMode: false,
       assistantId: '',
+      isPaid: false,
+      remainingMessages: 5, // Default starting value
       preferences: {
         style: 'gen-z',
         formality: 'balanced',
@@ -63,6 +69,8 @@ export const useUserStore = create<UserState>()(
         console.log("Updated store preferences:", JSON.stringify(get().preferences, null, 2));
       },
       setAssistantId: (id) => set({ assistantId: id }),
+      setIsPaid: (isPaid) => set({ isPaid }),
+      setRemainingMessages: (count) => set({ remainingMessages: count }),
       toggleDarkMode: () => set((state) => ({ isDarkMode: !state.isDarkMode })),
       toggleOfflineMode: () => set((state) => ({ isOfflineMode: !state.isOfflineMode }))
     }),

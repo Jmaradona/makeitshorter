@@ -3,9 +3,13 @@ import { motion } from 'framer-motion';
 import { Wand2, Send, Sparkles, AlertTriangle } from 'lucide-react';
 import ToneSelector from './ToneSelector';
 import ResizableOutput from './ResizableOutput';
+import UsageBanner from './UsageBanner';
+import PaymentModal from './PaymentModal';
+import LoginRequiredModal from './LoginRequiredModal';
 import { enhanceEmail } from '../services/aiService';
 import { countWords, cleanAIResponse, extractEmailParts } from '../utils/textUtils';
 import { useUserStore } from '../store/userStore';
+import { checkUsage } from '../services/usageService';
 import AnimatedPlaceholder from './AnimatedPlaceholder';
 
 interface Persona {
@@ -49,12 +53,16 @@ export default function EmailEditor({ persona, assistantId }: EmailEditorProps) 
   const [targetWordCount, setTargetWordCount] = useState<number | null>(null);
   const [actualWordCount, setActualWordCount] = useState<number | null>(null);
   const [processingStatus, setProcessingStatus] = useState('');
-  const { isOfflineMode } = useUserStore();
+  const { isOfflineMode, user, remainingMessages, setRemainingMessages } = useUserStore();
   
   const [hasShownOutput, setHasShownOutput] = useState(false);
   const [triggerInitialAnimation, setTriggerInitialAnimation] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showPlaceholder, setShowPlaceholder] = useState(true);
+  
+  // New state for modals
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const lastRequestRef = useRef<{
@@ -65,6 +73,16 @@ export default function EmailEditor({ persona, assistantId }: EmailEditorProps) 
   useEffect(() => {
     setShowPlaceholder(!inputText);
   }, [inputText, isInputFocused]);
+
+  // Fetch initial usage data
+  useEffect(() => {
+    const fetchUsage = async () => {
+      const usageData = await checkUsage(user?.id);
+      setRemainingMessages(usageData.remainingMessages);
+    };
+    
+    fetchUsage();
+  }, [user, setRemainingMessages]);
 
   // Calculate target word count based on input text and selected length
   const calculateTargetWords = (text: string, lengthType: string): number => {
@@ -160,8 +178,16 @@ export default function EmailEditor({ persona, assistantId }: EmailEditorProps) 
       });
 
       if (response.error) {
-        setError(response.error);
-        return;
+        if (response.error === 'login_required') {
+          setIsLoginModalOpen(true);
+          return;
+        } else if (response.error === 'payment_required') {
+          setIsPaymentModalOpen(true);
+          return;
+        } else {
+          setError(response.error);
+          return;
+        }
       }
       
       if (response.warning) {
@@ -252,8 +278,16 @@ export default function EmailEditor({ persona, assistantId }: EmailEditorProps) 
       });
 
       if (response.error) {
-        setError(response.error);
-        return;
+        if (response.error === 'login_required') {
+          setIsLoginModalOpen(true);
+          return;
+        } else if (response.error === 'payment_required') {
+          setIsPaymentModalOpen(true);
+          return;
+        } else {
+          setError(response.error);
+          return;
+        }
       }
 
       // Extract just the subject from the response
@@ -310,6 +344,12 @@ export default function EmailEditor({ persona, assistantId }: EmailEditorProps) 
         </div>
 
         <div className="flex-1 flex flex-col space-y-4 md:space-y-6 overflow-hidden">
+          <UsageBanner 
+            remainingMessages={remainingMessages} 
+            showUpgradeButton={user !== null && remainingMessages <= 0}
+            onUpgradeClick={() => setIsPaymentModalOpen(true)} 
+          />
+          
           <div className="flex-1 flex flex-col min-h-[200px]">
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -424,6 +464,18 @@ export default function EmailEditor({ persona, assistantId }: EmailEditorProps) 
           )}
         </div>
       </motion.div>
+
+      {/* Payment Modal */}
+      <PaymentModal 
+        isOpen={isPaymentModalOpen} 
+        onClose={() => setIsPaymentModalOpen(false)} 
+      />
+
+      {/* Login Required Modal */}
+      <LoginRequiredModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
     </div>
   );
 }

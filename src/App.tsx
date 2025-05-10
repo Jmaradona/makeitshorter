@@ -13,6 +13,7 @@ import AboutPage from './components/AboutPage';
 import { User2, Moon, Sun, Wifi, WifiOff, HelpCircle, Home, Menu, X } from 'lucide-react';
 import { useUserStore } from './store/userStore';
 import { supabase, getUserProfile, onAuthStateChange } from './lib/supabase';
+import { checkUsage } from './services/usageService';
 import env from './env';
 
 // Default OpenAI Assistant ID for everyone
@@ -34,7 +35,9 @@ export default function App() {
     isOfflineMode,
     toggleOfflineMode,
     assistantId,
-    setAssistantId
+    setAssistantId,
+    setRemainingMessages,
+    setIsPaid
   } = useUserStore();
   const navigate = useNavigate();
   const location = useLocation();
@@ -92,6 +95,15 @@ export default function App() {
               setPreferences(profile.preferences);
             }
             
+            // Set usage data if available
+            if (profile.daily_free_messages !== undefined) {
+              setRemainingMessages(profile.daily_free_messages);
+            }
+            
+            if (profile.paid !== undefined) {
+              setIsPaid(profile.paid);
+            }
+            
             // Set assistant ID only if it's a valid format
             if (profile.assistantId && profile.assistantId.startsWith('asst_')) {
               console.log("Found valid assistantId in Supabase profile:", profile.assistantId);
@@ -106,6 +118,11 @@ export default function App() {
             console.log("No profile found, using default assistantId:", DEFAULT_ASSISTANT_ID);
             setAssistantId(DEFAULT_ASSISTANT_ID);
           }
+          
+          // Check and update usage data
+          const usageData = await checkUsage(session.user.id);
+          setRemainingMessages(usageData.remainingMessages);
+          setIsPaid(usageData.requiresPayment);
         } catch (error) {
           console.error("Error loading user profile:", error);
           // Fallback to default assistant ID on error
@@ -139,6 +156,15 @@ export default function App() {
                 setPreferences(profile.preferences);
               }
               
+              // Set usage data if available
+              if (profile.daily_free_messages !== undefined) {
+                setRemainingMessages(profile.daily_free_messages);
+              }
+              
+              if (profile.paid !== undefined) {
+                setIsPaid(profile.paid);
+              }
+              
               if (profile.assistantId && profile.assistantId.startsWith('asst_')) {
                 console.log("Found valid assistantId in profile during session check:", profile.assistantId);
                 setAssistantId(profile.assistantId);
@@ -152,6 +178,11 @@ export default function App() {
               console.log("No profile found during session check, using default:", DEFAULT_ASSISTANT_ID);
               setAssistantId(DEFAULT_ASSISTANT_ID);
             }
+            
+            // Check and update usage data
+            const usageData = await checkUsage(data.session.user.id);
+            setRemainingMessages(usageData.remainingMessages);
+            setIsPaid(usageData.requiresPayment);
           } catch (error) {
             console.error("Error loading user profile during session check:", error);
             // Fallback to default assistant ID on error
@@ -178,7 +209,7 @@ export default function App() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [setUser, setPreferences, setAssistantId]);
+  }, [setUser, setPreferences, setAssistantId, setRemainingMessages, setIsPaid]);
 
   // Close mobile menu when navigating
   useEffect(() => {

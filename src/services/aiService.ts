@@ -1,6 +1,7 @@
 import { AIResponse } from '../types';
 import { countWords, cleanAIResponse, extractEmailParts } from '../utils/textUtils';
 import { useUserStore } from '../store/userStore';
+import { checkUsage, recordUsage } from './usageService';
 import env from '../env';
 import OpenAI from 'openai';
 
@@ -60,8 +61,8 @@ function generateTestModeResponse(content: string, targetWords: number, inputTyp
       subject = `Subject: ${extractedSubject}\n\n`;
     } else {
       // Generate a subject based on content
-      const firstSentence = content.split(/[.!?]/, 1)[0].trim();
-      const keywords = firstSentence.split(/\s+/).filter(word => word.length > 3).slice(0, 3);
+      const firstLine = content.split(/[.!?]/, 1)[0].trim();
+      const keywords = firstLine.split(/\s+/).filter(word => word.length > 3).slice(0, 3);
       
       if (keywords.length > 0) {
         subject = `Subject: ${keywords.join(' ')} - Update\n\n`;
@@ -383,7 +384,8 @@ CRITICAL REQUIREMENT: This is a "Same Length" request. You MUST generate EXACTLY
       console.error("Error with provided assistant ID, trying default:", error.message);
       
       // Only retry with default if the error is about assistant_id
-      if (error.message?.includes('assistant_id')) {
+      if (error.message?.includes('Invalid \'assistant_id\'') || 
+          error.message?.includes('assistant_id')) {
         run = await openai.beta.threads.runs.create(
           thread.id,
           {
@@ -478,6 +480,7 @@ CRITICAL REQUIREMENT: This is a "Same Length" request. You MUST generate EXACTLY
 export async function enhanceEmail(payload: EnhanceEmailPayload): Promise<AIResponse> {
   const { isOfflineMode } = useUserStore.getState();
   const { assistantId } = useUserStore.getState();
+  const { user } = useUserStore.getState();
   
   if (!payload.content?.trim()) {
     return { 
@@ -498,6 +501,28 @@ export async function enhanceEmail(payload: EnhanceEmailPayload): Promise<AIResp
     return { 
       enhancedContent: '',
       error: `Input too long. Maximum ${MAX_INPUT_TOKENS} tokens allowed.` 
+    };
+  }
+
+  // Check usage limits
+  const usageCheck = await checkUsage(user?.id);
+  if (!usageCheck.canMakeRequest) {
+    if (usageCheck.requiresAuth) {
+      return {
+        enhancedContent: '',
+        error: 'login_required'
+      };
+    }
+    if (usageCheck.requiresPayment) {
+      return {
+        enhancedContent: '',
+        error: 'payment_required'
+      };
+    }
+    
+    return {
+      enhancedContent: '',
+      error: 'Usage limit reached'
     };
   }
 
@@ -574,6 +599,15 @@ export async function enhanceEmail(payload: EnhanceEmailPayload): Promise<AIResp
         }
       }
     }
+    
+    // Record successful usage
+    await recordUsage(user?.id);
+    
+    // Update remaining messages count in store
+    const updatedUsage = await checkUsage(user?.id);
+    const { setRemainingMessages, setIsPaid } = useUserStore.getState();
+    setRemainingMessages(updatedUsage.remainingMessages);
+    setIsPaid(updatedUsage.requiresPayment);
     
     return { 
       enhancedContent,

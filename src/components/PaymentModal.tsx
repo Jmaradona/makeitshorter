@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, CreditCard, Zap, Check, AlertTriangle } from 'lucide-react';
+import { X, CreditCard, Zap, Check, AlertTriangle, Loader2 } from 'lucide-react';
 import { useUserStore } from '../store/userStore';
 import { toast } from 'react-hot-toast';
+import { STRIPE_PRODUCTS } from '../stripe-config';
+import { createCheckoutSession } from '../services/stripeService';
+import { useNavigate } from 'react-router-dom';
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -11,22 +14,26 @@ interface PaymentModalProps {
 
 export default function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
   const { user } = useUserStore();
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(STRIPE_PRODUCTS[0].priceId);
+  const navigate = useNavigate();
 
   const handlePayment = async () => {
+    if (!user) {
+      toast.error('Please sign in to subscribe');
+      navigate('/login');
+      return;
+    }
+
     setIsLoading(true);
     try {
-      toast.error('To integrate Stripe payments, please visit https://bolt.new/setup/stripe');
-      // This URL will be shown to users, who can then follow the link to set up Stripe
+      const { url } = await createCheckoutSession(selectedPlan);
       
-      // Wait briefly to show loading state
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Close modal after showing message
-      onClose();
-    } catch (error) {
+      // Redirect to Stripe Checkout
+      window.location.href = url;
+    } catch (error: any) {
       console.error('Payment error:', error);
-      toast.error('Payment processing failed. Please try again.');
+      toast.error(error.message || 'Payment processing failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -79,32 +86,36 @@ export default function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                 </div>
               </div>
 
-              <div className="space-y-6">
-                <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Premium Plan</h3>
-                    <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2.5 py-0.5 rounded-full text-xs font-medium">
-                      Recommended
-                    </span>
+              <div className="space-y-4">
+                {STRIPE_PRODUCTS.map((product) => (
+                  <div 
+                    key={product.priceId}
+                    className={`border rounded-lg p-4 cursor-pointer transition-colors ${
+                      selectedPlan === product.priceId
+                        ? 'border-blue-500 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                        : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
+                    }`}
+                    onClick={() => setSelectedPlan(product.priceId)}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{product.name}</h3>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                        selectedPlan === product.priceId
+                          ? 'border-blue-500 dark:border-blue-400 bg-blue-500 dark:bg-blue-400'
+                          : 'border-gray-300 dark:border-gray-600'
+                      }`}>
+                        {selectedPlan === product.priceId && (
+                          <Check className="w-3 h-3 text-white" />
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{product.description}</p>
+                    <div className="flex items-baseline">
+                      <span className="text-xl font-bold text-gray-900 dark:text-white">{product.price}</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400 ml-1">/month</span>
+                    </div>
                   </div>
-                  <div className="flex items-baseline mb-4">
-                    <span className="text-2xl font-bold text-gray-900 dark:text-white">$9.99</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400 ml-1">/month</span>
-                  </div>
-                  <ul className="space-y-2 mb-4">
-                    {[
-                      'Unlimited daily messages',
-                      'Priority response times',
-                      'Access to all features',
-                      'Email support',
-                    ].map((feature, index) => (
-                      <li key={index} className="flex items-center text-sm text-gray-700 dark:text-gray-300">
-                        <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                ))}
 
                 <motion.button
                   whileHover={{ scale: 1.01 }}
@@ -115,7 +126,7 @@ export default function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                 >
                   {isLoading ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-white dark:border-gray-900 border-t-transparent dark:border-t-transparent rounded-full animate-spin"></div>
+                      <Loader2 className="w-4 h-4 animate-spin" />
                       <span className="text-sm font-medium ml-2">Processing...</span>
                     </>
                   ) : (

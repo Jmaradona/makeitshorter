@@ -112,11 +112,38 @@
 /* Ensure all content is scrollable */
 html, body, #root {
   height: 100%;
+  min-height: 100%;
   overflow-x: hidden;
+}
+
+/* Ensure the main container allows scrolling */
+#root {
+  display: flex;
+  flex-direction: column;
 }
 
 /* Fix for pricing and account pages */
 .overflow-y-auto {
   overflow-y: auto !important;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure draggable handles are always visible */
+.re-resizable {
+  position: relative;
+  padding-bottom: 40px !important; /* Ensure space for handle */
+}
+
+/* Make sure the main containers have proper overflow */
+.h-screen {
+  height: 100vh;
+  min-height: 100vh;
+  max-height: 100vh;
+}
+
+/* Safe area padding for mobile devices */
+@supports (padding: env(safe-area-inset-bottom)) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }

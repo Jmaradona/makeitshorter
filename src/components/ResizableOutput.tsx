@@ -48,8 +48,8 @@ export default function ResizableOutput({
   const [isRegeneratingSubject, setIsRegeneratingSubject] = useState(false);
   
   // Constants for maintaining handle visibility
-  const HANDLE_MARGIN = 60; // Space below container for handle
-  const MINIMUM_BOX_HEIGHT = 80; // Minimum allowed box height
+  const HANDLE_MARGIN = 80; // Increased from 60 to 80 for better visibility
+  const MINIMUM_BOX_HEIGHT = 120; // Increased from 80 to 120 to ensure more content is visible
   const LINE_HEIGHT = 24; // Approximate line height in pixels
   
   const contentRef = useRef<HTMLDivElement>(null);
@@ -69,6 +69,9 @@ export default function ResizableOutput({
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
+      
+      // Immediately update max height on window resize
+      updateMaxHeight();
     };
     
     window.addEventListener('resize', handleResize);
@@ -85,21 +88,20 @@ export default function ResizableOutput({
   };
 
   // Calculate available height in the viewport with buffer for handle
-  const calculateMaxHeight = () => {
+  const updateMaxHeight = () => {
     if (containerRef.current) {
       const container = containerRef.current;
       const containerTop = container.getBoundingClientRect().top;
       const viewportHeight = window.innerHeight;
       // Add fixed buffer for the handle plus extra space
       const offset = 140 + HANDLE_MARGIN;
-      return Math.max(MINIMUM_BOX_HEIGHT, viewportHeight - containerTop - offset);
+      setMaxHeight(Math.max(MINIMUM_BOX_HEIGHT, viewportHeight - containerTop - offset));
     }
-    return 800 - HANDLE_MARGIN; // Default fallback with handle margin
   };
 
   // Calculate the height needed to fit content
   const calculateFitToContentHeight = () => {
-    if (!measureRef.current || !text) return originalHeightRef.current || 0;
+    if (!measureRef.current || !text) return originalHeightRef.current || MINIMUM_BOX_HEIGHT;
     
     // Force a reflow to get accurate measurements
     measureRef.current.style.height = 'auto';
@@ -117,14 +119,13 @@ export default function ResizableOutput({
     if (!measureRef.current || !text) return;
     
     // Calculate the maximum available height first
-    const availableMaxHeight = calculateMaxHeight();
-    setMaxHeight(availableMaxHeight);
+    updateMaxHeight();
     
     // Get the height needed to fit content
     const fitHeight = calculateFitToContentHeight();
     
     // Determine if we need scrolling or not
-    const finalHeight = Math.min(fitHeight, availableMaxHeight);
+    const finalHeight = Math.min(fitHeight, maxHeight);
     
     // Store initial text length on first content initialization
     if (!contentInitializedRef.current) {
@@ -354,7 +355,8 @@ export default function ResizableOutput({
   // Effect to update dimensions when text changes
   useEffect(() => {
     if (text) {
-      const timer = setTimeout(updateHeight, 10);
+      // Use a short delay to let the DOM update first
+      const timer = setTimeout(updateHeight, 100);
       return () => clearTimeout(timer);
     }
   }, [text]);
@@ -398,10 +400,21 @@ export default function ResizableOutput({
       if (resizeTimeoutRef.current) {
         clearTimeout(resizeTimeoutRef.current);
       }
-      resizeTimeoutRef.current = setTimeout(updateHeight, 100);
+      
+      // Update max height immediately
+      updateMaxHeight();
+      
+      // Then update content height with a small delay
+      resizeTimeoutRef.current = setTimeout(() => {
+        updateHeight();
+      }, 100);
     };
 
     window.addEventListener('resize', handleResize);
+    
+    // Initial size update
+    handleResize();
+    
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -574,7 +587,7 @@ export default function ResizableOutput({
     <div 
       ref={containerRef} 
       className="flex-1 flex flex-col space-y-3 md:space-y-4 relative"
-      style={{ paddingBottom: (isMobile ? 40 : HANDLE_MARGIN) + 'px' }}
+      style={{ paddingBottom: (isMobile ? 80 : HANDLE_MARGIN) + 'px' }} // Increased padding for better visibility
     >
       {/* Background resize text indicator */}
       <div className="absolute bottom-[50%] left-1/2 -translate-x-1/2 flex items-center gap-2 text-gray-200 dark:text-gray-700 pointer-events-none select-none z-0 transition-none">
@@ -647,7 +660,7 @@ export default function ResizableOutput({
         </motion.div>
       )}
 
-      <div className="flex-1 relative z-10">
+      <div className="flex-1 relative z-10 min-h-[200px]">
         <Resizable
           size={size}
           onResizeStart={handleResizeStart}
@@ -659,8 +672,8 @@ export default function ResizableOutput({
           grid={[1, 1]}
           handleStyles={{
             bottom: {
-              bottom: '-18px', // Position the handle closer to the box
-              height: '24px',
+              bottom: '-24px', // Position the handle further from the box for easier targeting
+              height: '36px',  // Increased handle height for better touch target
               cursor: 'row-resize'
             }
           }}
@@ -672,7 +685,9 @@ export default function ResizableOutput({
                 variants={wiggleAnimation}
                 style={{ 
                   transformOrigin: "50% -10px",
-                  filter: isResizing ? "drop-shadow(0 0 3px rgba(0,0,0,0.1))" : "none"
+                  filter: isResizing ? "drop-shadow(0 0 3px rgba(0,0,0,0.1))" : "none",
+                  width: '100%', // Ensure the handle spans the full width
+                  padding: '12px 0' // Add padding for larger touch area
                 }}
               >
                 <motion.div 
@@ -690,7 +705,7 @@ export default function ResizableOutput({
                 />
                 
                 <motion.div 
-                  className="absolute mt-5 px-2 md:px-3 py-1 bg-gray-900/90 dark:bg-white/90 text-white dark:text-gray-900 text-[10px] md:text-xs font-medium rounded-md shadow-sm flex items-center gap-1 md:gap-1.5 whitespace-nowrap transition-all duration-200"
+                  className="absolute mt-5 px-2 md:px-3 py-1 bg-gray-900/90 dark:bg-white/90 text-white dark:text-gray-900 text-[10px] md:text-xs font-medium rounded-md shadow-lg flex items-center gap-1 md:gap-1.5 whitespace-nowrap transition-all duration-200"
                   initial={{ opacity: 0 }}
                   animate={isResizing ? {
                     opacity: 1,
@@ -762,6 +777,24 @@ export default function ResizableOutput({
             </p>
           </div>
         </Resizable>
+        
+        {/* Additional visual indicator for the handle - more prominent on small screens */}
+        {!isResizing && (
+          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-70 pointer-events-none">
+            <motion.div
+              animate={{
+                y: [0, -2, 0, 2, 0],
+                opacity: [0.5, 0.8, 0.5] 
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatType: "loop"
+              }}
+              className="w-12 h-4 bg-gray-400 dark:bg-gray-600 rounded-b-lg"
+            />
+          </div>
+        )}
       </div>
 
       {isResizing && (

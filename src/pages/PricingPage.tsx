@@ -25,6 +25,7 @@ export default function PricingPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          className="overflow-y-auto"
         >
           <PricingPlans />
           
@@ -57,7 +58,7 @@ export default function PricingPage() {
                   Is there a free trial?
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  We offer a limited free tier that allows you to try our basic features. Premium features require a subscription.
+                  Yes! You get 5 free requests per day to try our service. Premium plans offer unlimited usage and additional features.
                 </p>
               </div>
               
@@ -66,7 +67,7 @@ export default function PricingPage() {
                   How do I cancel my subscription?
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  You can cancel your subscription at any time from your account page. Your subscription will remain active until the end of your current billing period.
+                  You can cancel your subscription at any time from your account page or through the Stripe customer portal. Your subscription will remain active until the end of your current billing period.
                 </p>
               </div>
             </div>

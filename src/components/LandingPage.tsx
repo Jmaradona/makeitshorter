@@ -265,7 +265,7 @@ export default function LandingPage() {
         {user ? <LoggedInIndicator /> : <AuthButton />}
       </div>
 
-      <div className="w-full max-w-7xl px-4 sm:px-6 min-h-screen flex items-center">
+      <div className="w-full max-w-7xl px-4 sm:px-6 min-h-screen flex items-center overflow-y-auto py-20">
         <div className="w-full py-16 md:py-20">
           <div className="flex flex-col lg:flex-row items-center justify-center gap-16 md:gap-20 lg:gap-12">
             

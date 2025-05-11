@@ -19,6 +19,7 @@
 
   body {
     @apply antialiased bg-[rgb(var(--bg-primary))] text-[rgb(var(--text-primary))] transition-colors;
+    overflow-x: hidden;
   }
   
   /* Add serif font for stylized text */
@@ -106,4 +107,16 @@
   .scrollbar-thin::-webkit-scrollbar-thumb {
     @apply bg-gray-300 dark:bg-gray-700 rounded-full hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors;
   }
+}
+
+/* Ensure all content is scrollable */
+html, body, #root {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Fix for pricing and account pages */
+.overflow-y-auto {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
 }

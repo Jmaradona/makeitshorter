@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Loader2, ArrowLeft, LogIn } from 'lucide-react';
+import { Loader2, ArrowLeft } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useUserStore } from '../store/userStore';
 import { toast } from 'react-hot-toast';
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const { setUser } = useUserStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const returnTo = new URLSearchParams(location.search).get('returnTo') || '/app';
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
@@ -18,7 +19,7 @@ export default function LoginPage() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin + '/app',
+          redirectTo: window.location.origin + returnTo,
           queryParams: {
             access_type: 'offline',
             prompt: 'select_account'
@@ -100,13 +101,20 @@ export default function LoginPage() {
             </motion.button>
           </div>
           
-          <div className="relative flex items-center justify-center mb-6">
+          <div className="relative flex items-center justify-center my-6">
             <div className="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
-            <span className="flex-shrink mx-3 text-gray-500 dark:text-gray-400 text-sm">We recommend Google Sign-In</span>
+            <span className="flex-shrink mx-3 text-gray-500 dark:text-gray-400 text-sm">Google Sign-In Only</span>
             <div className="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
           </div>
           
-          <p className="text-center text-gray-500 dark:text-gray-400 text-sm mb-6">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/30 rounded-lg p-4">
+            <p className="text-sm text-blue-600 dark:text-blue-300">
+              We only support Google Sign-In to provide a secure and streamlined experience.
+              Email/password login is not available.
+            </p>
+          </div>
+          
+          <p className="text-center text-gray-500 dark:text-gray-400 text-sm mt-6">
             By signing in, you agree to our <a href="#" className="text-gray-900 dark:text-gray-200">Terms of Service</a> and <a href="#" className="text-gray-900 dark:text-gray-200">Privacy Policy</a>.
           </p>
           
@@ -114,7 +122,7 @@ export default function LoginPage() {
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Don't have an account?{' '}
               <Link to="/signup" className="font-medium text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-100">
-                Sign up
+                Sign up with Google
               </Link>
             </p>
           </div>

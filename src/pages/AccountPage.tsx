@@ -10,7 +10,7 @@ export default function AccountPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
         <div className="text-center p-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             Please sign in to view your account
@@ -27,7 +27,7 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 overflow-y-auto h-full">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 overflow-y-auto">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
           <Link
@@ -43,6 +43,7 @@ export default function AccountPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          className="mb-20" // Added bottom margin to ensure content is fully visible
         >
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
             Account Settings
@@ -151,28 +152,33 @@ export default function AccountPage() {
               </section>
               
               <section id="security">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Security</h2>
                   
                   <div className="space-y-4">
                     <div>
                       <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</h3>
-                      <button className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        Change Password
+                      <button disabled className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800 cursor-not-allowed">
+                        Change Password (Google Sign-In only)
                       </button>
                     </div>
                     
                     <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Two-Factor Authentication</h3>
-                      <button className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        Enable 2FA
-                      </button>
+                      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Google Account Security</h3>
+                      <a 
+                        href="https://myaccount.google.com/security" 
+                        target="_blank"
+                        rel="noopener noreferrer" 
+                        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-block"
+                      >
+                        Manage Google Security Settings
+                      </a>
                     </div>
                     
                     <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                       <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sessions</h3>
                       <button className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        Manage Sessions
+                        Sign Out All Devices
                       </button>
                     </div>
                   </div>

@@ -9,7 +9,7 @@ export default function PricingPage() {
   const { user } = useUserStore();
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 overflow-y-auto h-full pb-20">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 overflow-y-auto h-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
           <Link
@@ -25,7 +25,7 @@ export default function PricingPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="overflow-visible"
+          className="overflow-y-auto"
         >
           <PricingPlans />
           

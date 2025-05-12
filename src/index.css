@@ -113,10 +113,21 @@
 html, body, #root {
   height: 100%;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Fix for pricing and account pages */
 .overflow-y-auto {
   overflow-y: auto !important;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Extra padding at the bottom of main content areas to ensure handle visibility */
+.min-h-screen {
+  padding-bottom: 60px;
+}
+
+/* Ensure handle is always visible with proper spacing */
+.re-resizable {
+  margin-bottom: 50px;
 }

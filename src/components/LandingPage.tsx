@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ChevronDown, Mail, ArrowDown } from 'lucide-react';
+import { ArrowRight, ChevronsUpDown, Mail, ArrowUp } from 'lucide-react';
 import AuthButton from './AuthButton';
 import LoggedInIndicator from './LoggedInIndicator';
 import { useUserStore } from '../store/userStore';
@@ -516,7 +516,7 @@ export default function LandingPage() {
                   >
                     <div className="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full mb-1" />
                     <div className="px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs font-medium rounded-md flex items-center gap-1.5">
-                      <ChevronDown className="w-3 h-3" />
+                      <ChevronsUpDown className="w-3 h-3" />
                       {currentSize === 'long' ? 'Detailed Version' :
                        currentSize === 'medium' ? 'Balanced Version' :
                        'Short Version'}
@@ -539,7 +539,7 @@ export default function LandingPage() {
                       >
                         <div className="flex flex-col items-center">
                           <div className="p-1.5 rounded-full bg-yellow-400 dark:bg-yellow-500 shadow-lg">
-                            <ArrowDown className="w-7 h-7 text-white" />
+                            <ArrowUp className="w-7 h-7 text-white" />
                           </div>
                           <div className="text-sm font-bold text-yellow-500 dark:text-yellow-300 mt-1 px-2 py-0.5 rounded-md">
                             Try dragging me!

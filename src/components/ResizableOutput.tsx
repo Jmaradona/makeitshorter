@@ -574,7 +574,7 @@ export default function ResizableOutput({
     <div 
       ref={containerRef} 
       className="flex-1 flex flex-col space-y-3 md:space-y-4 relative"
-      style={{ paddingBottom: (isMobile ? 40 : HANDLE_MARGIN) + 'px' }}
+      style={{ paddingBottom: (isMobile ? 60 : HANDLE_MARGIN) + 'px' }}
     >
       {/* Background resize text indicator */}
       <div className="absolute bottom-[50%] left-1/2 -translate-x-1/2 flex items-center gap-2 text-gray-200 dark:text-gray-700 pointer-events-none select-none z-0 transition-none">

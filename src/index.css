@@ -110,35 +110,39 @@
   }
 }
 
-/* Landing page specific styles */
-.landing-content {
-  @apply fixed top-1/2 -translate-y-1/2 left-0 lg:left-24 px-4 lg:px-0 w-full lg:w-[45%] max-w-xl z-10;
+/* Ensure all content is scrollable */
+html, body, #root {
+  min-height: 100%;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
 }
 
-.landing-demo {
-  @apply absolute right-0 top-1/2 -translate-y-1/2 w-full lg:w-[45%] max-w-xl;
+/* Fix for pricing and account pages */
+.overflow-y-auto {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Animated text highlight */
-.text-highlight {
-  @apply transition-colors duration-300;
+/* Extra padding at the bottom of main content areas to ensure handle visibility */
+.min-h-screen {
+  min-height: 100vh;
+  padding-bottom: 80px !important;
 }
 
-.text-highlight-active {
-  @apply text-red-500 dark:text-red-400;
+/* Ensure handle is always visible with proper spacing */
+.re-resizable {
+  margin-bottom: 70px !important;
 }
 
-/* Ensure proper spacing */
-.landing-container {
-  @apply min-h-screen relative overflow-hidden;
-  padding-bottom: 4rem;
+/* Global bottom padding to ensure enough space at the bottom of all pages */
+main {
+  padding-bottom: 80px;
 }
 
-/* Improved drag handle visibility */
-.drag-handle {
-  @apply w-24 h-3 bg-gray-300 dark:bg-gray-600 rounded-full transition-all duration-200;
-}
-
-.drag-handle-active {
-  @apply w-32 h-4 bg-gray-900 dark:bg-gray-100;
+/* Fix for main app container to use proper height */
+.h-screen {
+  height: auto !important;
+  min-height: 100vh;
 }

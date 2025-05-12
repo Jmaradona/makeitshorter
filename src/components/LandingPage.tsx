@@ -91,21 +91,6 @@ export default function LandingPage() {
   const [showPricingTooltip, setShowPricingTooltip] = useState(false);
   const aiTextRef = useRef<HTMLSpanElement>(null);
   const pricingTextRef = useRef<HTMLSpanElement>(null);
-  const [animatedWords, setAnimatedWords] = useState<Set<number>>(new Set());
-
-  const animateRandomWords = () => {
-    const content = demoEmails[currentSize].body;
-    const words = content.split(/\s+/);
-    const newHighlightedWords = new Set<number>();
-    
-    const numWords = Math.floor(Math.random() * 3) + 2;
-    while (newHighlightedWords.size < numWords) {
-      const randomIndex = Math.floor(Math.random() * words.length);
-      newHighlightedWords.add(randomIndex);
-    }
-    
-    setAnimatedWords(newHighlightedWords);
-  };
 
   useEffect(() => {
     if (user) {
@@ -172,13 +157,11 @@ export default function LandingPage() {
     }
     
     const deltaY = clientY - startY;
-    const dragSensitivity = 4;
+    const dragSensitivity = 2;
     
     let newProgress = Math.max(0, Math.min(100, dragProgress + (deltaY / dragSensitivity)));
     setDragProgress(newProgress);
     setStartY(clientY);
-    
-    animateRandomWords();
     
     updateHeightFromDragProgress(newProgress);
   };
@@ -247,27 +230,6 @@ export default function LandingPage() {
   }, [userInteracted]);
 
   const heightWithBuffer = (height: number) => Math.max(height + 40, 150);
-
-  const renderEmailContent = (content: string) => {
-    const words = content.split(/\s+/);
-    return words.map((word, index) => (
-      <span
-        key={index}
-        className={`text-highlight ${animatedWords.has(index) ? 'text-highlight-active' : ''}`}
-      >
-        {word}{' '}
-      </span>
-    ));
-  };
-
-  const getWordDisplay = () => {
-    switch(currentSize) {
-      case 'long': return 'Detailed Version';
-      case 'medium': return 'Balanced Version';
-      case 'short': return 'Short Version';
-      default: return '';
-    }
-  };
 
   return (
     <div className="min-h-screen relative overflow-y-auto overflow-x-hidden bg-white dark:bg-black flex justify-center pb-20">
@@ -492,8 +454,8 @@ export default function LandingPage() {
                         <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           Subject: {demoEmails[currentSize as keyof typeof demoEmails].subject}
                         </div>
-                        <div className="text-gray-800 dark:text-gray-200">
-                          {renderEmailContent(demoEmails[currentSize as keyof typeof demoEmails].body)}
+                        <div className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
+                          {demoEmails[currentSize as keyof typeof demoEmails].body}
                         </div>
                       </div>
                     </motion.div>
@@ -526,7 +488,9 @@ export default function LandingPage() {
                     <div className="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full mb-1" />
                     <div className="px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs font-medium rounded-md flex items-center gap-1.5">
                       <ChevronsUpDown className="w-3 h-3" />
-                      {getWordDisplay()}
+                      {currentSize === 'long' ? 'Detailed Version' :
+                       currentSize === 'medium' ? 'Balanced Version' :
+                       'Short Version'}
                     </div>
                     
                     {showHandleHint && (

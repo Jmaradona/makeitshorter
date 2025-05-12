@@ -66,11 +66,11 @@ Alex`
 };
 
 export default function LandingPage() {
-  const [currentSize, setCurrentSize] = useState('long'); // Changed to start with 'long'
+  const [currentSize, setCurrentSize] = useState('long');
   const [isResizing, setIsResizing] = useState(false);
   const [startY, setStartY] = useState(0);
   const [currentHeight, setCurrentHeight] = useState(0);
-  const [dragProgress, setDragProgress] = useState(85); // Changed to 85 to start with long version
+  const [dragProgress, setDragProgress] = useState(85);
   const contentRefs = useRef({
     long: React.createRef<HTMLDivElement>(),
     medium: React.createRef<HTMLDivElement>(),
@@ -92,14 +92,12 @@ export default function LandingPage() {
   const aiTextRef = useRef<HTMLSpanElement>(null);
   const pricingTextRef = useRef<HTMLSpanElement>(null);
 
-  // Auto-redirect to app if logged in
   useEffect(() => {
     if (user) {
       navigate('/app');
     }
   }, [user, navigate]);
 
-  // Measure the natural heights of all content
   useEffect(() => {
     const measureContents = () => {
       const newHeights = {
@@ -109,21 +107,17 @@ export default function LandingPage() {
       };
       
       setContentHeights(newHeights);
-      // Initialize with long height
       setCurrentHeight(newHeights.long);
     };
     
-    // Allow time for rendering and font loading
     const timer = setTimeout(measureContents, 100);
     return () => clearTimeout(timer);
   }, []);
 
-  // Check for mobile viewport
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
       
-      // Re-measure content heights on window resize
       const newHeights = {
         long: contentRefs.current.long.current?.scrollHeight || 0,
         medium: contentRefs.current.medium.current?.scrollHeight || 0,
@@ -132,7 +126,6 @@ export default function LandingPage() {
       
       setContentHeights(newHeights);
       
-      // Update current height based on drag progress
       updateHeightFromDragProgress(dragProgress, newHeights);
     };
     
@@ -140,7 +133,6 @@ export default function LandingPage() {
     return () => window.removeEventListener('resize', handleResize);
   }, [dragProgress]);
 
-  // Handle drag start
   const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
     setIsResizing(true);
     if ('touches' in e) {
@@ -154,7 +146,6 @@ export default function LandingPage() {
     document.body.style.cursor = 'ns-resize';
   };
 
-  // Handle drag movement
   const handleDrag = (e: MouseEvent | TouchEvent) => {
     if (!isResizing) return;
     
@@ -166,20 +157,16 @@ export default function LandingPage() {
     }
     
     const deltaY = clientY - startY;
-    const dragSensitivity = 2; // Higher = more sensitive
+    const dragSensitivity = 2;
     
-    // Update drag progress (0-100)
     let newProgress = Math.max(0, Math.min(100, dragProgress + (deltaY / dragSensitivity)));
     setDragProgress(newProgress);
     setStartY(clientY);
     
-    // Calculate and set email size based on drag progress
     updateHeightFromDragProgress(newProgress);
   };
 
-  // Update height based on drag progress
   const updateHeightFromDragProgress = (progress: number, heights = contentHeights) => {
-    // Using three distinct thresholds for clear separation between versions
     if (progress <= 30) {
       setCurrentSize('short');
       setCurrentHeight(heights.short);
@@ -192,28 +179,25 @@ export default function LandingPage() {
     }
   };
 
-  // Handle drag end
   const handleDragEnd = () => {
     setIsResizing(false);
     document.body.style.cursor = 'default';
     
-    // Snap to nearest size position with better thresholds
     if (dragProgress <= 30) {
-      setDragProgress(15); // Short - lower value for clearer distinction
+      setDragProgress(15);
       setCurrentSize('short');
       setCurrentHeight(contentHeights.short);
     } else if (dragProgress <= 70) {
-      setDragProgress(50); // Medium (middle)
+      setDragProgress(50);
       setCurrentSize('medium');
       setCurrentHeight(contentHeights.medium);
     } else {
-      setDragProgress(85); // Long
+      setDragProgress(85);
       setCurrentSize('long');
       setCurrentHeight(contentHeights.long);
     }
   };
 
-  // Add global event listeners for drag
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => handleDrag(e);
     const handleTouchMove = (e: TouchEvent) => handleDrag(e);
@@ -235,41 +219,35 @@ export default function LandingPage() {
     };
   }, [isResizing, startY, dragProgress]);
   
-  // Hide the handle hint after some time if user hasn't interacted
   useEffect(() => {
     if (!userInteracted) {
       const timer = setTimeout(() => {
         setShowHandleHint(false);
-      }, 10000); // Hide after 10 seconds if user doesn't interact
+      }, 10000);
       
       return () => clearTimeout(timer);
     }
   }, [userInteracted]);
 
-  // Add extra padding to ensure buffer space
-  const heightWithBuffer = (height: number) => Math.max(height + 40, 150); 
+  const heightWithBuffer = (height: number) => Math.max(height + 40, 150);
 
   return (
     <div className="min-h-screen relative overflow-y-auto overflow-x-hidden bg-white dark:bg-black flex justify-center pb-20">
-      {/* App brand in top left corner */}
       <div className="fixed top-4 left-4 md:left-6 md:top-6 z-10">
-        <div className="font-semibold text-gray-900 dark:text-white">
+        <div className="font-semibold text-[rgb(var(--text-primary))]">
           <span className="font-serif italic">Make it </span>
           <span className="font-bold">SHORTER</span>
           <span className="font-serif italic">!!!</span>
         </div>
       </div>
 
-      {/* Auth display at the top */}
       <div className="fixed top-0 right-0 m-4 md:m-6 z-10">
         {user ? <LoggedInIndicator /> : <AuthButton />}
       </div>
 
-      <div className="w-full max-w-7xl px-4 sm:px-6 min-h-screen flex items-center overflow-y-auto py-32">
-        <div className="w-full py-16 md:py-20">
+      <div className="w-full max-w-7xl px-4 sm:px-6 min-h-screen flex items-start overflow-y-auto py-16 md:py-24">
+        <div className="w-full">
           <div className="flex flex-col lg:flex-row items-center justify-center gap-16 md:gap-20 lg:gap-12">
-            
-            {/* Left Column - Content Column */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -327,7 +305,6 @@ export default function LandingPage() {
                 </span>.
               </motion.p>
 
-              {/* Features */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 w-full max-w-md">
                 {[
                   {
@@ -369,7 +346,6 @@ export default function LandingPage() {
                 ))}
               </div>
 
-              {/* CTA Button */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -412,7 +388,6 @@ export default function LandingPage() {
               </motion.div>
             </motion.div>
 
-            {/* Right Column - Demo Email Feature */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -425,7 +400,6 @@ export default function LandingPage() {
                   transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
                   className="relative bg-white dark:bg-black rounded-md border border-gray-200 dark:border-gray-800 w-full overflow-hidden"
                 >
-                  {/* Email UI header */}
                   <div className="h-10 border-b border-gray-200 dark:border-gray-800 flex items-center px-4">
                     <div className="flex space-x-1.5">
                       <div className="w-2.5 h-2.5 rounded-full bg-gray-300 dark:bg-gray-700"></div>
@@ -434,7 +408,6 @@ export default function LandingPage() {
                     </div>
                   </div>
                   
-                  {/* Hidden divs to measure natural content height */}
                   <div className="absolute opacity-0 pointer-events-none">
                     <div ref={contentRefs.current.long} className="w-full max-w-2xl">
                       <div className="p-6">
@@ -468,7 +441,6 @@ export default function LandingPage() {
                     </div>
                   </div>
 
-                  {/* Visible email content */}
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={currentSize}
@@ -490,7 +462,6 @@ export default function LandingPage() {
                   </AnimatePresence>
                 </motion.div>
                 
-                {/* Interactive Resize Handle */}
                 <div className="w-full flex justify-center mt-2 relative z-10 mb-20">
                   <motion.div
                     onMouseDown={handleDragStart}
@@ -522,7 +493,6 @@ export default function LandingPage() {
                        'Short Version'}
                     </div>
                     
-                    {/* Animated hint arrow pointing to handle - ENHANCED VISIBILITY */}
                     {showHandleHint && (
                       <motion.div 
                         className="absolute -top-20"
@@ -554,7 +524,6 @@ export default function LandingPage() {
                   </motion.div>
                 </div>
                 
-                {/* Size indicator pill */}
                 {isResizing && (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
@@ -572,7 +541,6 @@ export default function LandingPage() {
         </div>
       </div>
       
-      {/* About us text in bottom right corner */}
       <div className="fixed bottom-8 right-4 md:bottom-6 md:right-6 z-10">
         <Link to="/about" className="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
           About us

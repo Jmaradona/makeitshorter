@@ -20,6 +20,7 @@
   body {
     @apply antialiased bg-[rgb(var(--bg-primary))] text-[rgb(var(--text-primary))] transition-colors;
     overflow-x: hidden;
+    min-height: 100vh;
   }
   
   /* Add serif font for stylized text */
@@ -111,9 +112,11 @@
 
 /* Ensure all content is scrollable */
 html, body, #root {
-  height: 100%;
+  min-height: 100%;
+  height: auto;
   overflow-x: hidden;
   overflow-y: auto;
+  position: relative;
 }
 
 /* Fix for pricing and account pages */
@@ -124,10 +127,22 @@ html, body, #root {
 
 /* Extra padding at the bottom of main content areas to ensure handle visibility */
 .min-h-screen {
-  padding-bottom: 60px;
+  min-height: 100vh;
+  padding-bottom: 80px !important;
 }
 
 /* Ensure handle is always visible with proper spacing */
 .re-resizable {
-  margin-bottom: 50px;
+  margin-bottom: 70px !important;
+}
+
+/* Global bottom padding to ensure enough space at the bottom of all pages */
+main {
+  padding-bottom: 80px;
+}
+
+/* Fix for main app container to use proper height */
+.h-screen {
+  height: auto !important;
+  min-height: 100vh;
 }

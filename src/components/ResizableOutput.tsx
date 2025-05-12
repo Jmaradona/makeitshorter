@@ -48,8 +48,8 @@ export default function ResizableOutput({
   const [isRegeneratingSubject, setIsRegeneratingSubject] = useState(false);
   
   // Constants for maintaining handle visibility
-  const HANDLE_MARGIN = 60; // Space below container for handle
-  const MINIMUM_BOX_HEIGHT = 80; // Minimum allowed box height
+  const HANDLE_MARGIN = 80; // Space below container for handle (increased from 60)
+  const MINIMUM_BOX_HEIGHT = 100; // Minimum allowed box height (increased from 80)
   const LINE_HEIGHT = 24; // Approximate line height in pixels
   
   const contentRef = useRef<HTMLDivElement>(null);
@@ -91,7 +91,7 @@ export default function ResizableOutput({
       const containerTop = container.getBoundingClientRect().top;
       const viewportHeight = window.innerHeight;
       // Add fixed buffer for the handle plus extra space
-      const offset = 140 + HANDLE_MARGIN;
+      const offset = 160 + HANDLE_MARGIN; // Increased from 140 + HANDLE_MARGIN
       return Math.max(MINIMUM_BOX_HEIGHT, viewportHeight - containerTop - offset);
     }
     return 800 - HANDLE_MARGIN; // Default fallback with handle margin
@@ -574,7 +574,7 @@ export default function ResizableOutput({
     <div 
       ref={containerRef} 
       className="flex-1 flex flex-col space-y-3 md:space-y-4 relative"
-      style={{ paddingBottom: (isMobile ? 60 : HANDLE_MARGIN) + 'px' }}
+      style={{ paddingBottom: (isMobile ? 100 : HANDLE_MARGIN) + 'px' }}
     >
       {/* Background resize text indicator */}
       <div className="absolute bottom-[50%] left-1/2 -translate-x-1/2 flex items-center gap-2 text-gray-200 dark:text-gray-700 pointer-events-none select-none z-0 transition-none">
@@ -659,8 +659,8 @@ export default function ResizableOutput({
           grid={[1, 1]}
           handleStyles={{
             bottom: {
-              bottom: '-18px', // Position the handle closer to the box
-              height: '24px',
+              bottom: '-24px', // Position the handle farther below the box for better visibility
+              height: '36px', // Increase height for easier interaction
               cursor: 'row-resize'
             }
           }}
@@ -676,21 +676,21 @@ export default function ResizableOutput({
                 }}
               >
                 <motion.div 
-                  className="w-16 md:w-20 h-1.5 md:h-2 bg-gray-300 dark:bg-gray-600 rounded-full mb-1"
+                  className="w-16 md:w-20 h-2 md:h-3 bg-gray-300 dark:bg-gray-600 rounded-full mb-1"
                   animate={isResizing ? {
-                    width: 24,
-                    height: 3,
+                    width: 28,
+                    height: 4,
                     backgroundColor: "rgb(var(--text-primary))"
                   } : {
-                    width: 16,
-                    height: 2,
+                    width: 20,
+                    height: 3,
                     backgroundColor: "rgb(209 213 219)"
                   }}
                   transition={{ duration: 0.2 }}
                 />
                 
                 <motion.div 
-                  className="absolute mt-5 px-2 md:px-3 py-1 bg-gray-900/90 dark:bg-white/90 text-white dark:text-gray-900 text-[10px] md:text-xs font-medium rounded-md shadow-sm flex items-center gap-1 md:gap-1.5 whitespace-nowrap transition-all duration-200"
+                  className="absolute mt-5 px-3 md:px-3 py-1 bg-gray-900/90 dark:bg-white/90 text-white dark:text-gray-900 text-[10px] md:text-xs font-medium rounded-md shadow-sm flex items-center gap-1 md:gap-1.5 whitespace-nowrap transition-all duration-200"
                   initial={{ opacity: 0 }}
                   animate={isResizing ? {
                     opacity: 1,
@@ -769,7 +769,7 @@ export default function ResizableOutput({
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0, transition: { duration: 0.2, ease: [0.4, 0.0, 0.2, 1] } }}
           exit={{ opacity: 0, y: 5, transition: { duration: 0.15, ease: [0.4, 0.0, 1, 1] } }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 bg-gray-900/90 dark:bg-white/90 text-white dark:text-gray-900 px-3 md:px-4 py-1.5 md:py-2 rounded-md shadow-sm backdrop-blur-sm"
+          className="absolute bottom-24 left-1/2 -translate-x-1/2 bg-gray-900/90 dark:bg-white/90 text-white dark:text-gray-900 px-3 md:px-4 py-1.5 md:py-2 rounded-md shadow-sm backdrop-blur-sm"
         >
           <div className="flex flex-col items-center gap-1">
             <div className="flex items-center gap-1.5 md:gap-2">

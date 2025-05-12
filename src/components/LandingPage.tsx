@@ -250,7 +250,7 @@ export default function LandingPage() {
   const heightWithBuffer = (height: number) => Math.max(height + 40, 150); 
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-white dark:bg-black flex justify-center">
+    <div className="min-h-screen relative overflow-y-auto overflow-x-hidden bg-white dark:bg-black flex justify-center pb-20">
       {/* App brand in top left corner */}
       <div className="fixed top-4 left-4 md:left-6 md:top-6 z-10">
         <div className="font-semibold text-gray-900 dark:text-white">
@@ -265,7 +265,7 @@ export default function LandingPage() {
         {user ? <LoggedInIndicator /> : <AuthButton />}
       </div>
 
-      <div className="w-full max-w-7xl px-4 sm:px-6 min-h-screen flex items-center overflow-y-auto py-20">
+      <div className="w-full max-w-7xl px-4 sm:px-6 min-h-screen flex items-center overflow-y-auto py-32">
         <div className="w-full py-16 md:py-20">
           <div className="flex flex-col lg:flex-row items-center justify-center gap-16 md:gap-20 lg:gap-12">
             
@@ -491,7 +491,7 @@ export default function LandingPage() {
                 </motion.div>
                 
                 {/* Interactive Resize Handle */}
-                <div className="w-full flex justify-center mt-2 relative z-10">
+                <div className="w-full flex justify-center mt-2 relative z-10 mb-20">
                   <motion.div
                     onMouseDown={handleDragStart}
                     onTouchStart={handleDragStart}
@@ -573,7 +573,7 @@ export default function LandingPage() {
       </div>
       
       {/* About us text in bottom right corner */}
-      <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-10">
+      <div className="fixed bottom-8 right-4 md:bottom-6 md:right-6 z-10">
         <Link to="/about" className="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
           About us
         </Link>

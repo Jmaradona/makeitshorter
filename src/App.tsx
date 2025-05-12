@@ -259,284 +259,286 @@ export default function App() {
   const showNavbar = !isAuthRoute && !isCheckoutRoute && !isLandingRoute;
 
   return (
-    <div className={`h-screen flex flex-col ${isDarkMode ? 'dark' : ''}`}>
-      {showNavbar && (
-        <nav className="border-b border-gray-200 dark:border-gray-800 px-4 md:px-6 h-16 flex items-center justify-between flex-shrink-0 bg-[rgb(var(--bg-primary))] backdrop-blur-sm transition-colors">
-          <div className="flex items-center space-x-2.5">
-            <span className="font-semibold text-[rgb(var(--text-primary))]">
-              <span className="font-serif italic">Make it </span>
-              <span className="font-bold">SHORTER</span>
-              <span className="font-serif italic">!!!</span>
-            </span>
-          </div>
-          
-          {/* Mobile menu button */}
-          <button 
-            className="p-2 md:hidden"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle mobile menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-            ) : (
-              <Menu className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-            )}
-          </button>
-          
-          {/* Desktop navigation */}
-          <div className="hidden md:flex items-center gap-4">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/')}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              title="Home"
-            >
-              <Home className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-            </motion.button>
-
-            {isAppRoute && (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsTutorialOpen(true)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                title="Show tutorial"
-              >
-                <HelpCircle className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-              </motion.button>
-            )}
-            
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={toggleDarkMode}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              {isDarkMode ? (
-                <Sun className="w-5 h-5 text-gray-100" />
-              ) : (
-                <Moon className="w-5 h-5 text-gray-600" />
-              )}
-            </motion.button>
-            
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={toggleOfflineMode}
-              className={`p-2 rounded-lg transition-colors flex items-center gap-2 ${
-                isOfflineMode 
-                  ? "bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-100" 
-                  : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
-              }`}
-              title={isOfflineMode ? "Switch to online mode" : "Switch to test mode (fallback)"}
-            >
-              {isOfflineMode ? (
-                <WifiOff className="w-5 h-5" />
-              ) : (
-                <Wifi className="w-5 h-5" />
-              )}
-              <span className="text-sm font-medium hidden sm:inline">
-                {isOfflineMode ? "Test Mode" : "Online Mode"}
+    <div className="min-h-screen flex flex-col pb-20 relative bg-[rgb(var(--bg-primary))] transition-colors w-full h-auto overflow-y-auto overflow-x-hidden">
+      <div className={`${isDarkMode ? 'dark' : ''} w-full`}>
+        {showNavbar && (
+          <nav className="border-b border-gray-200 dark:border-gray-800 px-4 md:px-6 h-16 flex items-center justify-between flex-shrink-0 bg-[rgb(var(--bg-primary))] backdrop-blur-sm transition-colors sticky top-0 z-30">
+            <div className="flex items-center space-x-2.5">
+              <span className="font-semibold text-[rgb(var(--text-primary))]">
+                <span className="font-serif italic">Make it </span>
+                <span className="font-bold">SHORTER</span>
+                <span className="font-serif italic">!!!</span>
               </span>
-            </motion.button>
+            </div>
             
-            {isAppRoute && (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsPersonaEditorOpen(true)}
-                data-tutorial="persona"
-                className="p-2 bg-amber-100 dark:bg-amber-900/50 hover:bg-amber-200 dark:hover:bg-amber-900/70 rounded-lg transition-colors flex items-center gap-2 relative z-[65] backdrop-filter-none"
-              >
-                <User2 className="w-5 h-5 text-amber-800 dark:text-amber-100" />
-                <span className="text-sm font-medium text-amber-800 dark:text-amber-100">Persona</span>
-              </motion.button>
-            )}
-            
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/pricing')}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
+            {/* Mobile menu button */}
+            <button 
+              className="p-2 md:hidden"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle mobile menu"
             >
-              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Pricing</span>
-            </motion.button>
+              {isMobileMenuOpen ? (
+                <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+              ) : (
+                <Menu className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+              )}
+            </button>
             
-            {user && (
+            {/* Desktop navigation */}
+            <div className="hidden md:flex items-center gap-4">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate('/account')}
+                onClick={() => navigate('/')}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                title="Home"
+              >
+                <Home className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+              </motion.button>
+
+              {isAppRoute && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setIsTutorialOpen(true)}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  title="Show tutorial"
+                >
+                  <HelpCircle className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                </motion.button>
+              )}
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={toggleDarkMode}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                {isDarkMode ? (
+                  <Sun className="w-5 h-5 text-gray-100" />
+                ) : (
+                  <Moon className="w-5 h-5 text-gray-600" />
+                )}
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={toggleOfflineMode}
+                className={`p-2 rounded-lg transition-colors flex items-center gap-2 ${
+                  isOfflineMode 
+                    ? "bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-100" 
+                    : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
+                }`}
+                title={isOfflineMode ? "Switch to online mode" : "Switch to test mode (fallback)"}
+              >
+                {isOfflineMode ? (
+                  <WifiOff className="w-5 h-5" />
+                ) : (
+                  <Wifi className="w-5 h-5" />
+                )}
+                <span className="text-sm font-medium hidden sm:inline">
+                  {isOfflineMode ? "Test Mode" : "Online Mode"}
+                </span>
+              </motion.button>
+              
+              {isAppRoute && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setIsPersonaEditorOpen(true)}
+                  data-tutorial="persona"
+                  className="p-2 bg-amber-100 dark:bg-amber-900/50 hover:bg-amber-200 dark:hover:bg-amber-900/70 rounded-lg transition-colors flex items-center gap-2 relative z-[65] backdrop-filter-none"
+                >
+                  <User2 className="w-5 h-5 text-amber-800 dark:text-amber-100" />
+                  <span className="text-sm font-medium text-amber-800 dark:text-amber-100">Persona</span>
+                </motion.button>
+              )}
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate('/pricing')}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
               >
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Account</span>
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Pricing</span>
               </motion.button>
-            )}
-            
-            {isLoadingUser ? (
-              <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
-                <div className="w-6 h-6 rounded-full border-2 border-gray-300 dark:border-gray-600 border-t-transparent dark:border-t-transparent animate-spin"></div>
-              </div>
-            ) : (
-              user ? <LoggedInIndicator /> : <AuthButton />
-            )}
-          </div>
-          
-          {/* Mobile menu */}
-          {isMobileMenuOpen && (
-            <motion.div 
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="absolute top-16 left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-200/30 dark:border-gray-800/30 py-4 px-4 z-50 md:hidden"
-            >
-              <div className="flex flex-col gap-3">
+              
+              {user && (
                 <motion.button
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => navigate('/')}
+                  onClick={() => navigate('/account')}
                   className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
                 >
-                  <Home className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                  <span className="text-gray-700 dark:text-gray-300">Home</span>
+                  <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Account</span>
                 </motion.button>
-
-                {isAppRoute && (
-                  <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsTutorialOpen(true)}
-                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
-                  >
-                    <HelpCircle className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                    <span className="text-gray-700 dark:text-gray-300">Tutorial</span>
-                  </motion.button>
-                )}
-                
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={toggleDarkMode}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
-                >
-                  {isDarkMode ? (
-                    <>
-                      <Sun className="w-5 h-5 text-gray-100" />
-                      <span className="text-gray-200">Light Mode</span>
-                    </>
-                  ) : (
-                    <>
-                      <Moon className="w-5 h-5 text-gray-600" />
-                      <span className="text-gray-700">Dark Mode</span>
-                    </>
-                  )}
-                </motion.button>
-                
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={toggleOfflineMode}
-                  className={`p-2 rounded-lg transition-colors flex items-center gap-2 ${
-                    isOfflineMode 
-                      ? "bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-100" 
-                      : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
-                  }`}
-                >
-                  {isOfflineMode ? (
-                    <>
-                      <WifiOff className="w-5 h-5" />
-                      <span className="text-amber-800 dark:text-amber-100">Test Mode</span>
-                    </>
-                  ) : (
-                    <>
-                      <Wifi className="w-5 h-5" />
-                      <span className="text-gray-700 dark:text-gray-300">Online Mode</span>
-                    </>
-                  )}
-                </motion.button>
-                
-                {isAppRoute && (
-                  <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsPersonaEditorOpen(true)}
-                    data-tutorial="persona"
-                    className="p-2 bg-amber-100 dark:bg-amber-900/50 hover:bg-amber-200 dark:hover:bg-amber-900/70 rounded-lg transition-colors flex items-center gap-2"
-                  >
-                    <User2 className="w-5 h-5 text-amber-800 dark:text-amber-100" />
-                    <span className="text-sm font-medium text-amber-800 dark:text-amber-100">Persona</span>
-                  </motion.button>
-                )}
-                
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => navigate('/pricing')}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
-                >
-                  <span className="text-gray-700 dark:text-gray-300">Pricing</span>
-                </motion.button>
-                
-                {user && (
-                  <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => navigate('/account')}
-                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
-                  >
-                    <span className="text-gray-700 dark:text-gray-300">Account</span>
-                  </motion.button>
-                )}
-                
-                <div className="py-2">
-                  {isLoadingUser ? (
-                    <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 flex justify-center">
-                      <div className="w-6 h-6 rounded-full border-2 border-gray-300 dark:border-gray-600 border-t-transparent dark:border-t-transparent animate-spin"></div>
-                    </div>
-                  ) : (
-                    user ? <LoggedInIndicator /> : <AuthButton />
-                  )}
+              )}
+              
+              {isLoadingUser ? (
+                <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                  <div className="w-6 h-6 rounded-full border-2 border-gray-300 dark:border-gray-600 border-t-transparent dark:border-t-transparent animate-spin"></div>
                 </div>
-              </div>
-            </motion.div>
-          )}
-        </nav>
-      )}
-
-      <main className="flex-1 overflow-hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-        {isLoadingUser && !isAuthRoute && !isCheckoutRoute ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <div className="w-12 h-12 rounded-full border-4 border-gray-300 dark:border-gray-600 border-t-transparent dark:border-t-transparent animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+              ) : (
+                user ? <LoggedInIndicator /> : <AuthButton />
+              )}
             </div>
-          </div>
-        ) : (
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/app" element={
-              <EmailEditor 
-                persona={preferences} 
-                assistantId={assistantId || DEFAULT_ASSISTANT_ID} 
-              />
-            } />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/account" element={<AccountPage />} />
-            <Route path="/checkout/success" element={<CheckoutSuccess />} />
-            <Route path="/checkout/cancel" element={<CheckoutCancel />} />
-          </Routes>
-        )}
-      </main>
+            
+            {/* Mobile menu */}
+            {isMobileMenuOpen && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute top-16 left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-200/30 dark:border-gray-800/30 py-4 px-4 z-50 md:hidden"
+              >
+                <div className="flex flex-col gap-3">
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => navigate('/')}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
+                  >
+                    <Home className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                    <span className="text-gray-700 dark:text-gray-300">Home</span>
+                  </motion.button>
 
-      <PersonaEditor
-        isOpen={isPersonaEditorOpen}
-        onClose={() => setIsPersonaEditorOpen(false)}
-        onSave={setPreferences}
-      />
-      
-      <Tutorial
-        isOpen={isTutorialOpen}
-        onClose={() => setIsTutorialOpen(false)}
-      />
-      <Toaster position="top-right" />
+                  {isAppRoute && (
+                    <motion.button
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setIsTutorialOpen(true)}
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
+                    >
+                      <HelpCircle className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                      <span className="text-gray-700 dark:text-gray-300">Tutorial</span>
+                    </motion.button>
+                  )}
+                  
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    onClick={toggleDarkMode}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
+                  >
+                    {isDarkMode ? (
+                      <>
+                        <Sun className="w-5 h-5 text-gray-100" />
+                        <span className="text-gray-200">Light Mode</span>
+                      </>
+                    ) : (
+                      <>
+                        <Moon className="w-5 h-5 text-gray-600" />
+                        <span className="text-gray-700">Dark Mode</span>
+                      </>
+                    )}
+                  </motion.button>
+                  
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    onClick={toggleOfflineMode}
+                    className={`p-2 rounded-lg transition-colors flex items-center gap-2 ${
+                      isOfflineMode 
+                        ? "bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-100" 
+                        : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
+                    }`}
+                  >
+                    {isOfflineMode ? (
+                      <>
+                        <WifiOff className="w-5 h-5" />
+                        <span className="text-amber-800 dark:text-amber-100">Test Mode</span>
+                      </>
+                    ) : (
+                      <>
+                        <Wifi className="w-5 h-5" />
+                        <span className="text-gray-700 dark:text-gray-300">Online Mode</span>
+                      </>
+                    )}
+                  </motion.button>
+                  
+                  {isAppRoute && (
+                    <motion.button
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setIsPersonaEditorOpen(true)}
+                      data-tutorial="persona"
+                      className="p-2 bg-amber-100 dark:bg-amber-900/50 hover:bg-amber-200 dark:hover:bg-amber-900/70 rounded-lg transition-colors flex items-center gap-2"
+                    >
+                      <User2 className="w-5 h-5 text-amber-800 dark:text-amber-100" />
+                      <span className="text-sm font-medium text-amber-800 dark:text-amber-100">Persona</span>
+                    </motion.button>
+                  )}
+                  
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => navigate('/pricing')}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
+                  >
+                    <span className="text-gray-700 dark:text-gray-300">Pricing</span>
+                  </motion.button>
+                  
+                  {user && (
+                    <motion.button
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => navigate('/account')}
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
+                    >
+                      <span className="text-gray-700 dark:text-gray-300">Account</span>
+                    </motion.button>
+                  )}
+                  
+                  <div className="py-2">
+                    {isLoadingUser ? (
+                      <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 flex justify-center">
+                        <div className="w-6 h-6 rounded-full border-2 border-gray-300 dark:border-gray-600 border-t-transparent dark:border-t-transparent animate-spin"></div>
+                      </div>
+                    ) : (
+                      user ? <LoggedInIndicator /> : <AuthButton />
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </nav>
+        )}
+
+        <main className="flex-1 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 w-full overflow-x-hidden overflow-y-auto">
+          {isLoadingUser && !isAuthRoute && !isCheckoutRoute ? (
+            <div className="flex items-center justify-center min-h-[60vh]">
+              <div className="text-center">
+                <div className="w-12 h-12 rounded-full border-4 border-gray-300 dark:border-gray-600 border-t-transparent dark:border-t-transparent animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+              </div>
+            </div>
+          ) : (
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/app" element={
+                <EmailEditor 
+                  persona={preferences} 
+                  assistantId={assistantId || DEFAULT_ASSISTANT_ID} 
+                />
+              } />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/pricing" element={<PricingPage />} />
+              <Route path="/account" element={<AccountPage />} />
+              <Route path="/checkout/success" element={<CheckoutSuccess />} />
+              <Route path="/checkout/cancel" element={<CheckoutCancel />} />
+            </Routes>
+          )}
+        </main>
+
+        <PersonaEditor
+          isOpen={isPersonaEditorOpen}
+          onClose={() => setIsPersonaEditorOpen(false)}
+          onSave={setPreferences}
+        />
+        
+        <Tutorial
+          isOpen={isTutorialOpen}
+          onClose={() => setIsTutorialOpen(false)}
+        />
+        <Toaster position="top-right" />
+      </div>
     </div>
   );
 }

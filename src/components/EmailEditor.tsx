@@ -11,6 +11,7 @@ import { countWords, cleanAIResponse, extractEmailParts } from '../utils/textUti
 import { useUserStore } from '../store/userStore';
 import { checkUsage } from '../services/usageService';
 import AnimatedPlaceholder from './AnimatedPlaceholder';
+import SubscriptionBanner from './SubscriptionBanner';
 
 interface Persona {
   style: string;
@@ -323,7 +324,7 @@ export default function EmailEditor({ persona, assistantId }: EmailEditorProps) 
   ];
 
   return (
-    <div className="h-full grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 p-4 pb-16 lg:p-8 lg:pb-20 overflow-y-auto lg:overflow-hidden bg-white dark:bg-gray-900">
+    <div className="h-full grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 p-4 pb-16 lg:p-8 lg:pb-20 overflow-y-auto lg:overflow-auto bg-white dark:bg-gray-900">
       <motion.div 
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -349,6 +350,8 @@ export default function EmailEditor({ persona, assistantId }: EmailEditorProps) 
             showUpgradeButton={user !== null && remainingMessages <= 0}
             onUpgradeClick={() => setIsPaymentModalOpen(true)} 
           />
+          
+          <SubscriptionBanner />
           
           <div className="flex-1 flex flex-col min-h-[200px]">
             <div className="flex items-center justify-between mb-2">

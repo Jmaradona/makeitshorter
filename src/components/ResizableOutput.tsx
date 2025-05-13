@@ -46,12 +46,12 @@ export default function ResizableOutput({
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isRegeneratingBody, setIsRegeneratingBody] = useState(false);
   const [isRegeneratingSubject, setIsRegeneratingSubject] = useState(false);
-  
+
   // Constants for maintaining handle visibility
-  const HANDLE_MARGIN = 80; // Space below container for handle (increased from 60)
-  const MINIMUM_BOX_HEIGHT = 100; // Minimum allowed box height (increased from 80)
-  const LINE_HEIGHT = 24; // Approximate line height in pixels
-  
+  const HANDLE_MARGIN = 40; // Reduced from 60px to 40px
+  const MINIMUM_BOX_HEIGHT = 80;
+  const LINE_HEIGHT = 24;
+
   const contentRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const resizeTimeoutRef = useRef<NodeJS.Timeout>();
@@ -574,7 +574,7 @@ export default function ResizableOutput({
     <div 
       ref={containerRef} 
       className="flex-1 flex flex-col space-y-3 md:space-y-4 relative"
-      style={{ paddingBottom: (isMobile ? 100 : HANDLE_MARGIN) + 'px' }}
+      style={{ paddingBottom: (isMobile ? 40 : HANDLE_MARGIN) + 'px' }}
     >
       {/* Background resize text indicator */}
       <div className="absolute bottom-[50%] left-1/2 -translate-x-1/2 flex items-center gap-2 text-gray-200 dark:text-gray-700 pointer-events-none select-none z-0 transition-none">
@@ -727,7 +727,7 @@ export default function ResizableOutput({
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleRegenerateBody}
-                disabled={isRegeneratingBody || isLoading}
+                disabled={isRegeneratingBody || is Loading}
                 className="p-1.5 md:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors shadow-sm bg-white dark:bg-gray-800 disabled:opacity-50"
                 title="Regenerate content"
               >

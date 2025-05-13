@@ -29,15 +29,15 @@ const MAX_INPUT_WORDS = 2000;
 
 // Length adjustments as percentages of original
 const LENGTH_ADJUSTMENTS = {
-  concise: 0.75, // 75% of original (changed from 0.5 to 0.75)
-  balanced: 1.0, // 100% of original - MUST be exact match
-  detailed: 1.5  // 150% of original
+  concise: 0.75,
+  balanced: 1.0,
+  detailed: 1.5
 };
 
 // Minimum word counts to ensure reasonable output
 const MIN_WORD_COUNTS = {
   concise: 25,
-  balanced: 50, // Minimum for balanced to allow meaningful content
+  balanced: 50,
   detailed: 150
 };
 

@@ -727,7 +727,7 @@ export default function ResizableOutput({
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleRegenerateBody}
-                disabled={isRegeneratingBody || is Loading}
+                disabled={isRegeneratingBody || isLoading}
                 className="p-1.5 md:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors shadow-sm bg-white dark:bg-gray-800 disabled:opacity-50"
                 title="Regenerate content"
               >

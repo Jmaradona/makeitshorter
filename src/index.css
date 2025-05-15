@@ -128,17 +128,12 @@ html, body, #root {
 /* Extra padding at the bottom of main content areas to ensure handle visibility */
 .min-h-screen {
   min-height: 100vh;
-  padding-bottom: 80px !important;
+  padding-bottom: 20px !important;
 }
 
 /* Ensure handle is always visible with proper spacing */
 .re-resizable {
-  margin-bottom: 70px !important;
-}
-
-/* Global bottom padding to ensure enough space at the bottom of all pages */
-main {
-  padding-bottom: 80px;
+  margin-bottom: 20px !important;
 }
 
 /* Fix for main app container to use proper height */

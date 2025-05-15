@@ -259,7 +259,7 @@ export default function App() {
   const showNavbar = !isAuthRoute && !isCheckoutRoute && !isLandingRoute;
 
   return (
-    <div className="min-h-screen flex flex-col pb-10 relative bg-[rgb(var(--bg-primary))] transition-colors w-full h-auto overflow-y-auto overflow-x-hidden">
+    <div className="min-h-screen flex flex-col relative bg-[rgb(var(--bg-primary))] transition-colors w-full h-auto overflow-y-auto overflow-x-hidden">
       <div className={`${isDarkMode ? 'dark' : ''} w-full`}>
         {showNavbar && (
           <nav className="border-b border-gray-200 dark:border-gray-800 px-4 md:px-6 h-16 flex items-center justify-between flex-shrink-0 bg-[rgb(var(--bg-primary))] backdrop-blur-sm transition-colors sticky top-0 z-30">

@@ -324,7 +324,7 @@ export default function EmailEditor({ persona, assistantId }: EmailEditorProps) 
   ];
 
   return (
-    <div className="h-full grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 p-4 pb-0 lg:p-8 lg:pb-0 overflow-y-auto lg:overflow-auto bg-white dark:bg-gray-900">
+    <div className="h-full grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 p-4 pb-0 lg:p-8 lg:pb-0 overflow-y-auto lg:overflow-hidden bg-white dark:bg-gray-900 flex-grow">
       <motion.div 
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}

@@ -113,31 +113,37 @@
 /* Ensure all content is scrollable */
 html, body, #root {
   min-height: 100%;
-  height: auto;
+  height: 100vh;
   overflow-x: hidden;
-  overflow-y: auto;
   position: relative;
 }
 
-/* Fix for pricing and account pages */
-.overflow-y-auto {
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch;
+/* Fix for main app container to use proper height */
+.h-screen {
+  height: 100vh !important;
+  min-height: 100vh;
 }
 
-/* Extra padding at the bottom of main content areas to ensure handle visibility */
+/* Override any bottom margins or padding */
 .min-h-screen {
   min-height: 100vh;
   padding-bottom: 0 !important;
 }
 
-/* Ensure handle is always visible with proper spacing */
+/* Reset any bottom margin */
 .re-resizable {
   margin-bottom: 0 !important;
 }
 
-/* Fix for main app container to use proper height */
-.h-screen {
-  height: auto !important;
-  min-height: 100vh;
+/* Make main element take full height */
+main {
+  height: 100% !important;
+  min-height: calc(100vh - 64px) !important; /* 64px is the header height */
+}
+
+/* Make the root element full height */
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }

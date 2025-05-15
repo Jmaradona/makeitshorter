@@ -127,18 +127,19 @@ html, body, #root {
 /* Override any bottom margins or padding */
 .min-h-screen {
   min-height: 100vh;
-  padding-bottom: 0 !important;
+  padding-bottom: 16px !important; /* Add moderate padding */
 }
 
 /* Reset any bottom margin */
 .re-resizable {
-  margin-bottom: 0 !important;
+  margin-bottom: 24px !important; /* Add moderate margin for the resizable component */
 }
 
 /* Make main element take full height */
 main {
   height: 100% !important;
   min-height: calc(100vh - 64px) !important; /* 64px is the header height */
+  padding-bottom: 16px; /* Add moderate padding */
 }
 
 /* Make the root element full height */

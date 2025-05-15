@@ -503,7 +503,7 @@ export default function App() {
           {isLoadingUser && !isAuthRoute && !isCheckoutRoute ? (
             <div className="flex items-center justify-center min-h-[60vh]">
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full border-4 border-gray-300 dark:border-gray-600 border-t-transparent dark:border-t-transparent animate-spin mx-auto mb-40"></div>
+                <div className="w-12 h-12 rounded-full border-4 border-gray-300 dark:border-gray-600 border-t-transparent dark:border-t-transparent animate-spin mx-auto mb-4"></div>
                 <p className="text-gray-600 dark:text-gray-400">Loading...</p>
               </div>
             </div>

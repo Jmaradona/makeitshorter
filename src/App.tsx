@@ -259,7 +259,7 @@ export default function App() {
   const showNavbar = !isAuthRoute && !isCheckoutRoute && !isLandingRoute;
 
   return (
-    <div className="min-h-screen flex flex-col pb-20 relative bg-[rgb(var(--bg-primary))] transition-colors w-full h-auto overflow-y-auto overflow-x-hidden">
+    <div className="min-h-screen flex flex-col pb-10 relative bg-[rgb(var(--bg-primary))] transition-colors w-full h-auto overflow-y-auto overflow-x-hidden">
       <div className={`${isDarkMode ? 'dark' : ''} w-full`}>
         {showNavbar && (
           <nav className="border-b border-gray-200 dark:border-gray-800 px-4 md:px-6 h-16 flex items-center justify-between flex-shrink-0 bg-[rgb(var(--bg-primary))] backdrop-blur-sm transition-colors sticky top-0 z-30">
@@ -499,7 +499,7 @@ export default function App() {
           </nav>
         )}
 
-        <main className="flex-1 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 w-full overflow-x-hidden overflow-y-auto">
+        <main className="flex-1 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 w-full overflow-x-hidden overflow-y-auto pb-10">
           {isLoadingUser && !isAuthRoute && !isCheckoutRoute ? (
             <div className="flex items-center justify-center min-h-[60vh]">
               <div className="text-center">

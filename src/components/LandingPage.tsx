@@ -5,6 +5,7 @@ import { ArrowRight, ChevronsUpDown, Mail, ArrowUp } from 'lucide-react';
 import AuthButton from './AuthButton';
 import LoggedInIndicator from './LoggedInIndicator';
 import { useUserStore } from '../store/userStore';
+import ThemeToggle from './ThemeToggle';
 
 const demoEmails = {
   long: {
@@ -83,7 +84,7 @@ export default function LandingPage() {
   });
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { user } = useUserStore();
+  const { user, isDarkMode, toggleDarkMode } = useUserStore();
   const navigate = useNavigate();
   const [showHandleHint, setShowHandleHint] = useState(true);
   const [userInteracted, setUserInteracted] = useState(false);
@@ -243,7 +244,8 @@ export default function LandingPage() {
         </div>
       </div>
 
-      <div className="fixed top-0 right-0 m-4 md:m-6 z-10">
+      <div className="fixed top-4 right-4 md:right-6 md:top-6 z-10 flex items-center gap-2">
+        <ThemeToggle isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
         {user ? <LoggedInIndicator /> : <AuthButton />}
       </div>
 
@@ -547,6 +549,11 @@ export default function LandingPage() {
         <Link to="/about" className="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
           About us
         </Link>
+      </div>
+      
+      {/* Fixed theme toggle for landing page - bottom left */}
+      <div className="fixed bottom-8 left-4 md:bottom-6 md:left-6 z-10">
+        <ThemeToggle isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
       </div>
     </div>
   );

@@ -16,7 +16,8 @@ import PricingPage from './pages/PricingPage';
 import AccountPage from './pages/AccountPage';
 import CheckoutSuccess from './pages/CheckoutSuccess';
 import CheckoutCancel from './pages/CheckoutCancel';
-import { User2, Moon, Sun, Wifi, WifiOff, HelpCircle, Home, Menu, X } from 'lucide-react';
+import ThemeToggle from './components/ThemeToggle';
+import { User2, Wifi, WifiOff, HelpCircle, Home, Menu, X } from 'lucide-react';
 import { useUserStore } from './store/userStore';
 import { supabase, getUserProfile, onAuthStateChange } from './lib/supabase';
 import { checkUsage } from './services/usageService';
@@ -308,19 +309,8 @@ export default function App() {
                 </motion.button>
               )}
               
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={toggleDarkMode}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
-              >
-                {isDarkMode ? (
-                  <Sun className="w-5 h-5 text-gray-100" />
-                ) : (
-                  <Moon className="w-5 h-5 text-gray-600" />
-                )}
-              </motion.button>
+              {/* Theme toggle button (new version) */}
+              <ThemeToggle isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
               
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -414,23 +404,13 @@ export default function App() {
                     </motion.button>
                   )}
                   
-                  <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    onClick={toggleDarkMode}
-                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
-                  >
-                    {isDarkMode ? (
-                      <>
-                        <Sun className="w-5 h-5 text-gray-100" />
-                        <span className="text-gray-200">Light Mode</span>
-                      </>
-                    ) : (
-                      <>
-                        <Moon className="w-5 h-5 text-gray-600" />
-                        <span className="text-gray-700">Dark Mode</span>
-                      </>
-                    )}
-                  </motion.button>
+                  {/* Theme toggle button (new version) */}
+                  <div className="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                    <ThemeToggle isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
+                    <span className="text-gray-700 dark:text-gray-300 ml-2">
+                      {isDarkMode ? "Light Mode" : "Dark Mode"}
+                    </span>
+                  </div>
                   
                   <motion.button
                     whileTap={{ scale: 0.95 }}

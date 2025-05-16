@@ -2,8 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
+import ThemeToggle from './ThemeToggle';
+import { useUserStore } from '../store/userStore';
 
 export default function AboutPage() {
+  const { isDarkMode, toggleDarkMode } = useUserStore();
+  
   return (
     <div className="min-h-screen bg-white dark:bg-black flex relative">
       <div className="absolute top-6 left-6">
@@ -13,6 +17,11 @@ export default function AboutPage() {
         >
           <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
         </Link>
+      </div>
+      
+      {/* Theme toggle button - top right */}
+      <div className="absolute top-6 right-6">
+        <ThemeToggle isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
       </div>
 
       <motion.div
@@ -26,7 +35,7 @@ export default function AboutPage() {
           </p>
 
           <p className="text-base text-gray-600 dark:text-gray-400">
-            We focus on the task at hand, remove what you don’t need, and make every screen clear and straightforward.
+            We focus on the task at hand, remove what you don't need, and make every screen clear and straightforward.
           </p>
 
           <p className="text-base text-gray-600 dark:text-gray-400">

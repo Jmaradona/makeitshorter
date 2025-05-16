@@ -550,11 +550,6 @@ export default function LandingPage() {
           About us
         </Link>
       </div>
-      
-      {/* Fixed theme toggle for landing page - bottom left */}
-      <div className="fixed bottom-8 left-4 md:bottom-6 md:left-6 z-10">
-        <ThemeToggle isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-      </div>
     </div>
   );
 }

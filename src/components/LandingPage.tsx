@@ -157,7 +157,9 @@ export default function LandingPage() {
     }
     
     const deltaY = clientY - startY;
-    const dragSensitivity = 2;
+    // Increase drag sensitivity value to reduce the speed of movement
+    // Changed from 2 to 6 for more resistance - higher values mean more travel required
+    const dragSensitivity = 6;
     
     let newProgress = Math.max(0, Math.min(100, dragProgress + (deltaY / dragSensitivity)));
     setDragProgress(newProgress);

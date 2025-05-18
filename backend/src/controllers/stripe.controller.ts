@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../middleware/errorHandler.js';
 import { stripe, STRIPE_PRODUCTS } from '../utils/stripe.js';
 import { supabaseAdmin } from '../utils/supabase.js';
+import { config } from '../utils/config.js';
 
 // Create a checkout session
 export const createCheckoutSession = async (req: Request, res: Response, next: NextFunction) => {
@@ -100,7 +101,7 @@ export const createCheckoutSession = async (req: Request, res: Response, next: N
 export const handleWebhook = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const signature = req.headers['stripe-signature'] as string;
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const webhookSecret = config.stripe.webhookSecret;
 
     if (!signature || !webhookSecret) {
       throw new AppError('Stripe webhook signature required', 400);

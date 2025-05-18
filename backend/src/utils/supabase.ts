@@ -1,15 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
+import { config } from './config.js';
 
-dotenv.config();
-
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+const supabaseUrl = config.supabase.url;
+const supabaseServiceKey = config.supabase.serviceKey;
+const supabaseAnonKey = config.supabase.anonKey;
 
 if (!supabaseUrl || !supabaseServiceKey) {
   console.error('Missing Supabase environment variables');
-  process.exit(1);
+  if (config.nodeEnv === 'production') {
+    console.error('Please configure these in your Render.com environment variables');
+  }
 }
 
 // Create a Supabase client with the service key for admin access

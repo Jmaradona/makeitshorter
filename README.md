@@ -9,7 +9,49 @@ This is a monorepo containing both the frontend and backend code:
 - `frontend/` - React application with Vite
 - `backend/` - Express API server
 
-## Getting Started
+## Deployment to Render.com
+
+### Manual Deployment Setup
+
+1. **Backend Web Service**
+   - Create a new Web Service in Render
+   - Connect to your repository
+   - Configure as follows:
+     - **Name**: makeitshorter-api (or your preferred name)
+     - **Runtime**: Node
+     - **Build Command**: `cd backend && npm install && npm run build`
+     - **Start Command**: `cd backend && node dist/index.js`
+     - **Root Directory**: (Leave blank to use repository root)
+
+   - **Required Environment Variables**:
+     - `NODE_ENV`: `production`
+     - `PORT`: `10000` (Render's default)
+     - `CORS_ORIGIN`: (Your frontend URL, e.g., https://makeitshorter.onrender.com)
+     - `SUPABASE_URL`: (Your Supabase URL)
+     - `SUPABASE_SERVICE_KEY`: (Your Supabase service key)
+     - `SUPABASE_ANON_KEY`: (Your Supabase anonymous key)
+     - `OPENAI_API_KEY`: (Your OpenAI API key)
+     - `STRIPE_SECRET_KEY`: (Your Stripe secret key)
+     - `STRIPE_WEBHOOK_SECRET`: (Your Stripe webhook secret)
+
+2. **Frontend Static Site**
+   - Create a new Static Site in Render
+   - Connect to your repository
+   - Configure as follows:
+     - **Name**: makeitshorter (or your preferred name)
+     - **Build Command**: `cd frontend && npm install && npm run build`
+     - **Publish Directory**: `frontend/dist`
+     - **Root Directory**: (Leave blank to use repository root)
+
+   - **Required Environment Variables**:
+     - `VITE_API_URL`: (Your backend URL, e.g., https://makeitshorter-api.onrender.com)
+     - `VITE_SUPABASE_URL`: (Your Supabase URL)
+     - `VITE_SUPABASE_ANON_KEY`: (Your Supabase anonymous key)
+
+3. **Configure CORS**
+   - After deploying both services, update the backend's CORS_ORIGIN to match your frontend URL
+
+## Development Setup
 
 ### Prerequisites
 
@@ -29,62 +71,10 @@ cd makeitshorter
 npm install
 ```
 
-3. Create environment files
-
-For the backend:
-```bash
-cp backend/.env.example backend/.env
-```
-
-For the frontend:
-```bash
-cp frontend/.env.example frontend/.env
-```
-
-4. Fill in your environment variables:
-   - Supabase credentials
-   - OpenAI API key
-   - Stripe API keys
-
-### Development
-
-Run the complete application (both frontend and backend):
-
+3. Start development servers
 ```bash
 npm run dev
 ```
-
-Or run them separately:
-
-```bash
-# Run just the frontend
-npm run dev:frontend
-
-# Run just the backend
-npm run dev:backend
-```
-
-### Building for Production
-
-```bash
-# Build both frontend and backend
-npm run build
-
-# Build just the frontend
-npm run build:frontend
-
-# Build just the backend
-npm run build:backend
-```
-
-### Deployment
-
-This project is configured for deployment on [Render.com](https://render.com) using the `render.yaml` blueprint.
-
-To deploy:
-1. Push your code to a GitHub repository
-2. Create a new Render blueprint from your repository
-3. Configure your environment variables in the Render dashboard
 
 ## Features
 
@@ -95,26 +85,3 @@ To deploy:
 - User authentication with Google
 - Subscription management with Stripe
 - Light/dark mode
-
-## Technologies
-
-### Frontend
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- Framer Motion
-- Supabase Auth
-- Zustand for state management
-
-### Backend
-- Node.js
-- Express
-- TypeScript
-- OpenAI API
-- Supabase (PostgreSQL)
-- Stripe for payments
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.

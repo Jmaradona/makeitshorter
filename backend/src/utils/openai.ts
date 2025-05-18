@@ -1,13 +1,13 @@
 import OpenAI from 'openai';
-import dotenv from 'dotenv';
+import { config } from './config.js';
 
-dotenv.config();
-
-const apiKey = process.env.OPENAI_API_KEY;
+const apiKey = config.openai.apiKey;
 
 if (!apiKey) {
   console.error('Missing OpenAI API key environment variable');
-  process.exit(1);
+  if (config.nodeEnv === 'production') {
+    console.error('Please configure this in your Render.com environment variables');
+  }
 }
 
 // Initialize OpenAI client with beta header
@@ -19,7 +19,7 @@ export const openai = new OpenAI({
 });
 
 // Default assistant ID to use if user doesn't have one assigned
-export const DEFAULT_ASSISTANT_ID = 'asst_F4jvQcayYieO8oghTPxC7Qel';
+export const DEFAULT_ASSISTANT_ID = config.openai.defaultAssistantId;
 
 // Constants for token control
 export const MAX_INPUT_TOKENS = 16000;

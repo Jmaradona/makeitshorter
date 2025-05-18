@@ -1,13 +1,13 @@
 import Stripe from 'stripe';
-import dotenv from 'dotenv';
+import { config } from './config.js';
 
-dotenv.config();
-
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+const stripeSecretKey = config.stripe.secretKey;
 
 if (!stripeSecretKey) {
   console.error('Missing Stripe secret key environment variable');
-  process.exit(1);
+  if (config.nodeEnv === 'production') {
+    console.error('Please configure this in your Render.com environment variables');
+  }
 }
 
 export const stripe = new Stripe(stripeSecretKey, {

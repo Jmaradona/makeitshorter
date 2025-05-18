@@ -1,13 +1,14 @@
 // This script runs after deployment on Render.com
-import { logger } from "../dist/utils/logger.js";
 
-logger.info("Starting post-deployment tasks");
+console.log("=== Post-Deployment Initialization ===");
+console.log(`Timestamp: ${new Date().toISOString()}`);
+console.log(`Node version: ${process.version}`);
+console.log(`Environment: ${process.env.NODE_ENV}`);
 
 try {
   // Log environment information
-  logger.info(`Node environment: ${process.env.NODE_ENV}`);
-  logger.info(`Server port: ${process.env.PORT}`);
-  logger.info(`CORS origin: ${process.env.CORS_ORIGIN}`);
+  console.log(`Server port: ${process.env.PORT}`);
+  console.log(`CORS origin: ${process.env.CORS_ORIGIN}`);
   
   // Check critical environment variables (without logging values)
   const requiredEnvVars = [
@@ -17,15 +18,22 @@ try {
     'STRIPE_SECRET_KEY'
   ];
   
+  const missingVars = [];
+  
   for (const varName of requiredEnvVars) {
     if (!process.env[varName]) {
-      logger.error(`Missing required environment variable: ${varName}`);
-    } else {
-      logger.info(`Environment variable present: ${varName}`);
+      missingVars.push(varName);
     }
   }
   
-  logger.info("Post-deployment tasks completed successfully");
+  if (missingVars.length > 0) {
+    console.error(`⚠️ Missing required environment variables: ${missingVars.join(', ')}`);
+    console.error('Please configure these in your Render.com service settings');
+  } else {
+    console.log('✅ All required environment variables are configured');
+  }
+  
+  console.log("Post-deployment initialization completed");
 } catch (error) {
-  logger.error("Error during post-deployment tasks", error);
+  console.error("Error during post-deployment initialization:", error);
 }

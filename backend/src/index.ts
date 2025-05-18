@@ -2,23 +2,29 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
 import { errorHandler } from './middleware/errorHandler.js';
-
-// Load environment variables
-dotenv.config();
+import { config } from './utils/config.js';
 
 // Import routes
 import { apiRouter } from './routes/index.js';
 
+// Log configuration status
+config.logStatus();
+
+// Check for required environment variables
+if (!config.validate() && config.nodeEnv === 'production') {
+  console.error('Missing required configuration. Exiting.');
+  process.exit(1);
+}
+
 // Configure express app
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = parseInt(config.port, 10);
 
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: config.corsOrigin,
   credentials: true
 }));
 app.use(morgan('dev'));
@@ -30,7 +36,11 @@ app.use('/api', apiRouter);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok', environment: process.env.NODE_ENV });
+  res.status(200).json({ 
+    status: 'ok', 
+    environment: config.nodeEnv,
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Handle 404 errors
@@ -43,7 +53,8 @@ app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+  console.log(`Server running on port ${PORT} in ${config.nodeEnv} mode`);
+  console.log(`CORS configured for origin: ${config.corsOrigin}`);
 });
 
 export default app;

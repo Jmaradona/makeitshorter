@@ -27,20 +27,13 @@ The frontend React application for the Make it Shorter!!! email enhancement serv
 npm install
 ```
 
-2. Create environment file:
-```bash
-cp .env.example .env
-```
+## Environment Variables
 
-3. Fill in your environment variables:
-```
-# API Configuration
-VITE_API_URL=http://localhost:3001
+All environment variables should be configured in your Render.com dashboard:
 
-# Supabase Configuration (for auth only)
-VITE_SUPABASE_URL=your-supabase-url
-VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
-```
+- `VITE_API_URL` - URL of the backend API service
+- `VITE_SUPABASE_URL` - Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` - Your Supabase anonymous key
 
 ### Development
 

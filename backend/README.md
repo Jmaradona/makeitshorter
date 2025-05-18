@@ -24,31 +24,6 @@ The backend Express API for the Make it Shorter!!! email enhancement service.
 npm install
 ```
 
-2. Create environment file:
-```bash
-cp .env.example .env
-```
-
-3. Fill in your environment variables:
-```
-# Server Configuration
-PORT=3001
-NODE_ENV=development
-CORS_ORIGIN=http://localhost:5173
-
-# Supabase Configuration
-SUPABASE_URL=your-supabase-url
-SUPABASE_SERVICE_KEY=your-supabase-service-key
-SUPABASE_ANON_KEY=your-supabase-anon-key
-
-# OpenAI Configuration
-OPENAI_API_KEY=your-openai-api-key
-
-# Stripe Configuration
-STRIPE_SECRET_KEY=your-stripe-secret-key
-STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
-```
-
 ### Development
 
 Run the development server:
@@ -70,6 +45,20 @@ Start the production server:
 ```bash
 npm start
 ```
+
+## Environment Variables
+
+All environment variables should be configured in your Render.com dashboard:
+
+- `NODE_ENV` - Environment (development/production)
+- `PORT` - Server port (default: 3001)
+- `CORS_ORIGIN` - Allowed CORS origin
+- `SUPABASE_URL` - Your Supabase project URL
+- `SUPABASE_SERVICE_KEY` - Your Supabase service key
+- `SUPABASE_ANON_KEY` - Your Supabase anon key
+- `OPENAI_API_KEY` - Your OpenAI API key
+- `STRIPE_SECRET_KEY` - Your Stripe secret key
+- `STRIPE_WEBHOOK_SECRET` - Your Stripe webhook secret
 
 ## API Endpoints
 

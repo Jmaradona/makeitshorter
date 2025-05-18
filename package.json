@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "cd frontend && tsc && vite build",
     "preview": "vite preview",
     "postbuild": "cp _redirects dist/"
   },

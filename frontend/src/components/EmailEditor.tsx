@@ -6,7 +6,7 @@ import ResizableOutput from './ResizableOutput';
 import UsageBanner from './UsageBanner';
 import PaymentModal from './PaymentModal';
 import LoginRequiredModal from './LoginRequiredModal';
-import { enhanceEmail } from '../services/aiService';
+import { enhanceEmail } from '../services/apiService';
 import { countWords, cleanAIResponse, extractEmailParts } from '../utils/textUtils';
 import { useUserStore } from '../store/userStore';
 import { checkUsage } from '../services/usageService';

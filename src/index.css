@@ -19,6 +19,8 @@
 
   body {
     @apply antialiased bg-[rgb(var(--bg-primary))] text-[rgb(var(--text-primary))] transition-colors;
+    overflow-x: hidden;
+    min-height: 100vh;
   }
   
   /* Add serif font for stylized text */
@@ -106,4 +108,43 @@
   .scrollbar-thin::-webkit-scrollbar-thumb {
     @apply bg-gray-300 dark:bg-gray-700 rounded-full hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors;
   }
+}
+
+/* Ensure all content is scrollable */
+html, body, #root {
+  min-height: 100%;
+  height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Fix for main app container to use proper height */
+.h-screen {
+  height: 100vh !important;
+  min-height: 100vh;
+}
+
+/* Override any bottom margins or padding */
+.min-h-screen {
+  min-height: 100vh;
+  padding-bottom: 16px !important; /* Add moderate padding */
+}
+
+/* Reset any bottom margin */
+.re-resizable {
+  margin-bottom: 24px !important; /* Add moderate margin for the resizable component */
+}
+
+/* Make main element take full height */
+main {
+  height: 100% !important;
+  min-height: calc(100vh - 64px) !important; /* 64px is the header height */
+  padding-bottom: 16px; /* Add moderate padding */
+}
+
+/* Make the root element full height */
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }

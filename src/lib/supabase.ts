@@ -46,6 +46,9 @@ export type UserProfile = {
   assistantId?: string;
   created_at?: string;
   updated_at?: string;
+  daily_free_messages?: number;
+  last_reset_date?: string;
+  paid?: boolean;
 };
 
 // Helper functions for user management
@@ -119,6 +122,11 @@ export async function updateUserProfile(profile: Partial<UserProfile>): Promise<
       email: profile.email || existingUser?.email,
       preferences: profile.preferences || existingUser?.preferences,
       assistantId: profile.assistantId || existingUser?.assistantId,
+      daily_free_messages: profile.daily_free_messages !== undefined 
+        ? profile.daily_free_messages 
+        : existingUser?.daily_free_messages,
+      last_reset_date: profile.last_reset_date || existingUser?.last_reset_date,
+      paid: profile.paid !== undefined ? profile.paid : existingUser?.paid,
       updated_at: new Date().toISOString()
     };
     

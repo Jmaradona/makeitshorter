@@ -7,7 +7,7 @@ services:
     plan: starter
     rootDir: backend
     buildCommand: npm install && npm run build
-    startCommand: npm start
+    startCommand: npm run post-deploy && npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -31,7 +31,6 @@ services:
       - key: STRIPE_WEBHOOK_SECRET
         sync: false
     healthCheckPath: /health
-    postDeployCommand: npm run post-deploy
 
   # Frontend static web app
   - type: web

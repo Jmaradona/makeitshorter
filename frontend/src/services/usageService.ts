@@ -1,7 +1,9 @@
 import { supabase } from '@/lib/supabase-client';
+import { toast } from 'react-hot-toast';
 
 // Constants
 const GUEST_MAX_MESSAGES = 5;
+const STORAGE_KEY = 'guest_usage';
 
 // Types
 interface UsageResponse {
@@ -14,7 +16,7 @@ interface UsageResponse {
 // Guest usage tracking
 const getGuestUsage = (): number => {
   try {
-    const usage = localStorage.getItem('guest_usage');
+    const usage = localStorage.getItem(STORAGE_KEY);
     return usage ? parseInt(usage, 10) : 0;
   } catch (e) {
     console.error('Error retrieving guest usage:', e);
@@ -26,7 +28,7 @@ const incrementGuestUsage = (): number => {
   try {
     const currentUsage = getGuestUsage();
     const newUsage = currentUsage + 1;
-    localStorage.setItem('guest_usage', newUsage.toString());
+    localStorage.setItem(STORAGE_KEY, newUsage.toString());
     return newUsage;
   } catch (e) {
     console.error('Error incrementing guest usage:', e);
@@ -47,7 +49,7 @@ export const checkUsage = async (userId?: string | null): Promise<UsageResponse>
       }
       
       // Call the backend API to check usage
-      const response = await fetch('/api/user/profile', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`, {
         headers: {
           'Authorization': `Bearer ${session.access_token}`
         }
@@ -94,12 +96,11 @@ export const checkUsage = async (userId?: string | null): Promise<UsageResponse>
 };
 
 // Record a successful API request
-export const recordUsage = async (userId?: string | null): Promise<number> => {
-  // For authenticated users, the backend handles this
+export const recordUsage = async (userId?: string | null): Promise<UsageResponse> => {
+  // For authenticated users
   if (userId) {
     try {
-      // Update happens via API when the request is made
-      // Just return the current count
+      // Get the current user's access token
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
@@ -107,7 +108,7 @@ export const recordUsage = async (userId?: string | null): Promise<number> => {
       }
       
       // Get the updated profile to see remaining messages
-      const response = await fetch('/api/user/profile', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`, {
         headers: {
           'Authorization': `Bearer ${session.access_token}`
         }
@@ -118,15 +119,41 @@ export const recordUsage = async (userId?: string | null): Promise<number> => {
       }
       
       const userData = await response.json();
-      return userData.daily_free_messages;
+      
+      // Update state in user store
+      const { setRemainingMessages, setIsPaid } = useUserStore.getState();
+      setRemainingMessages(userData.daily_free_messages);
+      setIsPaid(!userData.paid && userData.daily_free_messages <= 0);
+      
+      return {
+        canMakeRequest: userData.paid || userData.daily_free_messages > 0,
+        remainingMessages: userData.daily_free_messages,
+        requiresAuth: false,
+        requiresPayment: !userData.paid && userData.daily_free_messages <= 0
+      };
     } catch (error) {
       console.error('Error recording user usage:', error);
-      return 0;
+      toast.error('Failed to update usage count');
+      
+      return {
+        canMakeRequest: false,
+        remainingMessages: 0,
+        requiresAuth: false,
+        requiresPayment: true
+      };
     }
   }
   
   // For guest users, increment the usage counter
   const newGuestUsage = incrementGuestUsage();
   const remainingMessages = Math.max(0, GUEST_MAX_MESSAGES - newGuestUsage);
-  return remainingMessages;
+  const canMakeRequest = newGuestUsage < GUEST_MAX_MESSAGES;
+  const requiresAuth = newGuestUsage >= GUEST_MAX_MESSAGES;
+  
+  return {
+    canMakeRequest,
+    remainingMessages,
+    requiresAuth,
+    requiresPayment: false
+  };
 };

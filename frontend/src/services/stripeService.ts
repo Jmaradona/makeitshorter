@@ -18,7 +18,7 @@ export async function createCheckoutSession(priceId: string, mode: 'subscription
     const cancelUrl = `${origin}/checkout/cancel`;
     
     // Call the backend API to create a checkout session
-    const response = await fetch('/api/stripe/checkout', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/checkout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ export async function getUserSubscription(): Promise<StripeSubscription | null> 
       return null;
     }
     
-    const response = await fetch('/api/stripe/subscription', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/subscription`, {
       headers: {
         'Authorization': `Bearer ${session.access_token}`
       }
@@ -87,7 +87,7 @@ export async function getUserOrders(): Promise<StripeOrder[]> {
       return [];
     }
     
-    const response = await fetch('/api/stripe/orders', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/orders`, {
       headers: {
         'Authorization': `Bearer ${session.access_token}`
       }

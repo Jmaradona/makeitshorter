@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { toast } from 'react-hot-toast';
 
 // Create a Supabase client for client-side operations with the anon key
 export const supabase = createClient(
@@ -17,9 +18,14 @@ export const supabase = createClient(
 // Helper functions for user management
 export async function getUserProfile(userId: string) {
   try {
-    const response = await fetch('/api/user/profile', {
+    const token = (await supabase.auth.getSession()).data.session?.access_token;
+    if (!token) {
+      throw new Error('No active session');
+    }
+    
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`, {
       headers: {
-        'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`
+        'Authorization': `Bearer ${token}`
       }
     });
     
@@ -36,11 +42,16 @@ export async function getUserProfile(userId: string) {
 
 export async function updateUserProfile(profile: any): Promise<boolean> {
   try {
-    const response = await fetch('/api/user/profile', {
+    const token = (await supabase.auth.getSession()).data.session?.access_token;
+    if (!token) {
+      throw new Error('No active session');
+    }
+    
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(profile)
     });
@@ -52,6 +63,7 @@ export async function updateUserProfile(profile: any): Promise<boolean> {
     return true;
   } catch (error) {
     console.error('Error updating user profile:', error);
+    toast.error('Failed to update profile');
     return false;
   }
 }
